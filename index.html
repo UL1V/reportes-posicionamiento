@@ -174,6 +174,7 @@
   <button class="nav-btn" onclick="showSection('temporal', this)">📅 Evolución</button>
   <button class="nav-btn" onclick="showSection('azteca', this)">🏟️ Estadio Azteca</button>
   <button class="nav-btn" onclick="showSection('historico', this)">📈 Histórico</button>
+  <button class="nav-btn" onclick="showSection('precios', this)">💰 Precios</button>
   <button class="nav-btn" onclick="showSection('recomendaciones', this)">💡 Conclusiones</button>
 </div>
 
@@ -997,6 +998,148 @@
   </div>
 </div>
 
+
+<!-- ===== PRECIOS ===== -->
+<div class="section" id="precios">
+  <div class="sec-title">Análisis de Precios</div>
+  <div class="sec-sub">Cómo el precio se relaciona con el posicionamiento, el score, las reseñas y la visibilidad · Todos los competidores · Mayo 2026</div>
+
+  <div class="kpi-grid">
+    <div class="kpi info">
+      <div class="kpi-label">Rango de precios del mercado</div>
+      <div class="kpi-value" style="font-size:22px">$527–$1,692</div>
+      <div class="kpi-sub">USD total de estancia · 3x diferencia entre extremos</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Precio promedio del mercado</div>
+      <div class="kpi-value" style="font-size:26px">$978</div>
+      <div class="kpi-sub">Promedio simple de las 5 marcas analizadas</div>
+    </div>
+    <div class="kpi warn">
+      <div class="kpi-label">ULIV sobre el promedio</div>
+      <div class="kpi-value">+24%</div>
+      <div class="kpi-sub">$1,216 vs. promedio $978 · 2° más caro del mercado</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Correlación precio-ranking</div>
+      <div class="kpi-value" id="kpiCorr">—</div>
+      <div class="kpi-sub">r de Pearson · mayor precio = peor posición (positivo)</div>
+    </div>
+  </div>
+
+  <!-- BUBBLE: Precio vs. Posición -->
+  <div class="card">
+    <div class="card-title">Precio vs. Posición por Marca</div>
+    <div class="card-sub">Eje X: precio promedio (USD) · Eje Y: posición media (menor = mejor) · Tamaño de burbuja proporcional al número de apariciones en top 100</div>
+    <div class="legend" style="margin-bottom:12px" id="priceBubbleLegend"></div>
+    <div class="chart-wrap" style="height:360px"><canvas id="chartPriceBubble"></canvas></div>
+    <p style="font-size:12px;color:#888;margin-top:10px">El cuadrante ideal es inferior-izquierdo (precio bajo, buena posición). ULIV ocupa un cuadrante intermedio: precio alto pero posición relativamente buena gracias al score y volumen de reseñas.</p>
+  </div>
+
+  <!-- GRID: Precio vs Score | Precio vs Apariciones -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Precio vs. Score</div>
+      <div class="card-sub">¿Las marcas más caras tienen mejor calificación?</div>
+      <div class="chart-wrap"><canvas id="chartPriceVsScore"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Precio vs. Apariciones en Top 100</div>
+      <div class="card-sub">¿El precio afecta la visibilidad total en las búsquedas?</div>
+      <div class="chart-wrap"><canvas id="chartPriceVsApps"></canvas></div>
+    </div>
+  </div>
+
+  <!-- DUAL AXIS: ULIV precio + ranking histórico -->
+  <div class="card">
+    <div class="card-title">ULIV — Evolución de Precio y Posicionamiento (3 períodos)</div>
+    <div class="card-sub">Eje izquierdo: precio promedio USD · Eje derecho: posición media (invertido: valor más alto = mejor posición) · La correlación inversa es visible en los 3 puntos</div>
+    <div class="chart-wrap"><canvas id="chartPriceDual"></canvas></div>
+  </div>
+
+  <!-- GRID: Rangos de precio | Eficiencia -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Análisis por Rangos de Precio</div>
+      <div class="card-sub">Posición media promedio y total de apariciones según el segmento de precio de la marca</div>
+      <div class="chart-wrap"><canvas id="chartPriceRanges"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Índice de Eficiencia de Precio</div>
+      <div class="card-sub">Combina posición, score, reseñas y precio. Mayor = mejor desempeño relativo al costo para el huésped.</div>
+      <div class="chart-wrap"><canvas id="chartPriceEfficiency"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Tabla resumen -->
+  <div class="card">
+    <div class="card-title">Tabla Comparativa: Precio y Métricas Clave</div>
+    <div class="card-sub">Todas las marcas ordenadas por precio ascendente</div>
+    <div class="props-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Marca</th>
+            <th>Precio (USD)</th>
+            <th>Posición media</th>
+            <th>Score</th>
+            <th>Reseñas</th>
+            <th>Apariciones</th>
+            <th>Segmento</th>
+          </tr>
+        </thead>
+        <tbody id="priceTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Insights -->
+  <div class="insights">
+    <div class="insight positive">
+      <div class="insight-icon">📊</div>
+      <div>
+        <div class="insight-title">Correlación moderada: r ≈ 0.53</div>
+        <div class="insight-text">El precio explica aproximadamente el 53% de la variación en posicionamiento entre marcas — correlación positiva moderada (mayor precio tiende a correlacionar con peor posición). Esto confirma que el precio es relevante, pero no determinante por sí solo: el score y las reseñas actúan como factores moderadores que permiten posicionarse bien incluso con precio más alto.</div>
+      </div>
+    </div>
+    <div class="insight positive">
+      <div class="insight-icon">🏆</div>
+      <div>
+        <div class="insight-title">ULIV "rompe" la tendencia del precio</div>
+        <div class="insight-text">Con el segundo precio más alto ($1,216), ULIV tiene el segundo mejor posicionamiento (#43.9), superando a Kukun que cobra $382 menos ($834) pero posiciona en #57.0. Esta ventaja se explica directamente por el score más alto (9.08 vs. 8.30) y el mayor volumen de reseñas (718 vs. 218). Son estos activos los que permiten mantener precio sin sacrificar posición proporcionalmente.</div>
+      </div>
+    </div>
+    <div class="insight info">
+      <div class="insight-icon">💡</div>
+      <div>
+        <div class="insight-title">El segmento Budget captura el mejor ranking promedio</div>
+        <div class="insight-text">Las marcas en el segmento Budget (&lt;$700 — Lumina y MR W) tienen una posición media combinada de #46.1, la mejor entre los segmentos. Sin embargo, esto está impulsado principalmente por Lumina (#42.8), que combina precio accesible con score competitivo (8.94). El precio bajo por sí mismo no garantiza buen posicionamiento: MR W en el mismo rango posiciona en #49.4.</div>
+      </div>
+    </div>
+    <div class="insight warning">
+      <div class="insight-icon">📉</div>
+      <div>
+        <div class="insight-title">Capitalia: precio premium sin desempeño premium</div>
+        <div class="insight-text">Capitalia es la marca más cara ($1,692) y la peor posicionada (#60.8). Su score (8.84) y reseñas (123) son los más bajos del grupo, lo que significa que paga el doble por el precio sin el respaldo de calidad que lo justifique en el algoritmo. Este es el caso donde el precio alto sí correlaciona directamente con mal posicionamiento sin factores compensadores.</div>
+      </div>
+    </div>
+    <div class="insight info">
+      <div class="insight-icon">⚖️</div>
+      <div>
+        <div class="insight-title">Precio y score: la combinación ganadora no es ninguno por separado</div>
+        <div class="insight-text">Los datos sugieren que el algoritmo de las OTAs no optimiza solo por precio ni solo por score — optimiza por la combinación. Lumina lidera porque tiene precio bajo Y score alto. ULIV es fuerte porque tiene score muy alto que compensa el precio más elevado. La estrategia de precio no puede analizarse de forma aislada: cada decisión de precio debería evaluarse junto con el nivel de score y reseñas del portafolio.</div>
+      </div>
+    </div>
+    <div class="insight tip">
+      <div class="insight-icon">🎯</div>
+      <div>
+        <div class="insight-title">Zona de precio óptima para ULIV: $1,000–$1,300</div>
+        <div class="insight-text">Basado en los 3 períodos históricos y la comparativa entre marcas, ULIV parece tener su mejor desempeño relativo cuando el precio se ubica entre $1,000 y $1,300. Por debajo de ese rango se acercaría a Lumina/Kukun sin diferenciación de score; por encima entraría en la zona donde Capitalia pierde posicionamiento. El rango $1,000–$1,300 aparece como el equilibrio entre posicionamiento OTA y propuesta de valor de marca.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div><!-- end main -->
 
 <div class="footer">ULIV · Análisis de Posicionamiento OTA · 07/05/2026 · Scraping: Expedia + Booking · Chrome + Edge incógnito · 6,000 registros</div>
@@ -1635,6 +1778,307 @@ function initCharts() {
       scales: {y: {title: {display: true, text: 'Apariciones ULIV en top 100'}, grid: {color: '#e8e5df'}}}
     }
   });
+  // ====== PRICE ANALYSIS CHARTS ======
+
+  // Pearson correlation utility
+  function pearson(xs, ys) {
+    const n = xs.length;
+    const mx = xs.reduce((a,b)=>a+b,0)/n;
+    const my = ys.reduce((a,b)=>a+b,0)/n;
+    const num = xs.reduce((s,x,i)=>s+(x-mx)*(ys[i]-my),0);
+    const dx = Math.sqrt(xs.reduce((s,x)=>s+(x-mx)**2,0));
+    const dy = Math.sqrt(ys.reduce((s,y)=>s+(y-my)**2,0));
+    return parseFloat((num/(dx*dy)).toFixed(2));
+  }
+
+  const priceArr  = BRANDS.map(b => avgPrice[b]);
+  const rankArr   = BRANDS.map(b => rankOverall[b]);
+  const scoreArr  = BRANDS.map(b => avgScore[b]);
+  const appArr    = BRANDS.map(b => appCount[b].reduce((a,c)=>a+c,0));
+  const reviewArr = BRANDS.map(b => avgReviews[b]);
+
+  const r_pr = pearson(priceArr, rankArr);
+  const el = document.getElementById('kpiCorr');
+  if (el) { el.textContent = `r = ${r_pr}`; el.className = 'kpi-value'; }
+
+  // Bubble legend
+  const legendEl = document.getElementById('priceBubbleLegend');
+  if (legendEl) {
+    BRANDS.forEach(b => {
+      legendEl.innerHTML += `<span class="legend-item"><span class="legend-dot" style="background:${COLORS[b]}"></span>${b}</span>`;
+    });
+  }
+
+  // 1. BUBBLE: Precio vs Posición
+  makeChart('chartPriceBubble', {
+    type: 'bubble',
+    data: {
+      datasets: BRANDS.map((b,i) => ({
+        label: b,
+        data: [{
+          x: avgPrice[b],
+          y: rankOverall[b],
+          r: Math.sqrt(appArr[i]) * 0.55
+        }],
+        backgroundColor: COLORS[b] + 'bb',
+        borderColor: COLORS[b],
+        borderWidth: 2
+      }))
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {display: false},
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const b = ctx.dataset.label;
+              return [`${b}`, `Precio: $${avgPrice[b].toLocaleString()}`, `Posición: #${rankOverall[b]}`, `Apariciones: ${appArr[BRANDS.indexOf(b)]}`];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: {display: true, text: 'Precio promedio (USD)'},
+          min: 350, max: 1900,
+          grid: {color: '#e8e5df'}
+        },
+        y: {
+          title: {display: true, text: 'Posición media (menor = mejor)'},
+          min: 30, max: 70,
+          grid: {color: '#e8e5df'}
+        }
+      }
+    }
+  });
+
+  // 2. Precio vs Score (scatter-like bar)
+  const brandsByPrice = [...BRANDS].sort((a,b) => avgPrice[a] - avgPrice[b]);
+  makeChart('chartPriceVsScore', {
+    type: 'bar',
+    data: {
+      labels: brandsByPrice,
+      datasets: [
+        {
+          label: 'Precio (USD)',
+          data: brandsByPrice.map(b => avgPrice[b]),
+          backgroundColor: brandsByPrice.map(b => COLORS[b] + '55'),
+          borderColor: brandsByPrice.map(b => COLORS[b]),
+          borderWidth: 2, borderRadius: 6, yAxisID: 'y1'
+        },
+        {
+          label: 'Score',
+          data: brandsByPrice.map(b => avgScore[b]),
+          type: 'line',
+          borderColor: '#1a1a2e',
+          backgroundColor: '#1a1a2e22',
+          fill: false, tension: 0.3, pointRadius: 7, pointHoverRadius: 9,
+          borderWidth: 2.5, yAxisID: 'y2',
+          pointBackgroundColor: brandsByPrice.map(b => COLORS[b])
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {legend: {position: 'top'}, tooltip: {mode: 'index', intersect: false}},
+      scales: {
+        y1: {position: 'left', title: {display: true, text: 'Precio (USD)'}, grid: {color: '#e8e5df'}},
+        y2: {position: 'right', title: {display: true, text: 'Score'}, min: 8.0, max: 9.3, grid: {display: false}}
+      }
+    }
+  });
+
+  // 3. Precio vs Apariciones
+  makeChart('chartPriceVsApps', {
+    type: 'bar',
+    data: {
+      labels: brandsByPrice,
+      datasets: [
+        {
+          label: 'Precio (USD)',
+          data: brandsByPrice.map(b => avgPrice[b]),
+          backgroundColor: brandsByPrice.map(b => COLORS[b] + '55'),
+          borderColor: brandsByPrice.map(b => COLORS[b]),
+          borderWidth: 2, borderRadius: 6, yAxisID: 'y1'
+        },
+        {
+          label: 'Apariciones top 100',
+          data: brandsByPrice.map(b => appArr[BRANDS.indexOf(b)]),
+          type: 'line',
+          borderColor: '#e76f51',
+          backgroundColor: '#e76f5122',
+          fill: false, tension: 0.3, pointRadius: 7, pointHoverRadius: 9,
+          borderWidth: 2.5, yAxisID: 'y2',
+          pointBackgroundColor: brandsByPrice.map(b => COLORS[b])
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {legend: {position: 'top'}, tooltip: {mode: 'index', intersect: false}},
+      scales: {
+        y1: {position: 'left', title: {display: true, text: 'Precio (USD)'}, grid: {color: '#e8e5df'}},
+        y2: {position: 'right', title: {display: true, text: 'Apariciones'}, grid: {display: false}}
+      }
+    }
+  });
+
+  // 4. ULIV Dual-axis: precio e historial de ranking
+  const histPrices = [1425, 1734, 1216];
+  const histRanks  = [39.2, 44.6, 43.9];
+  const histApps   = [271, 186, 243];
+  makeChart('chartPriceDual', {
+    type: 'line',
+    data: {
+      labels: ['27/03/2026', '09/04/2026', '07/05/2026'],
+      datasets: [
+        {
+          label: 'Precio promedio (USD)',
+          data: histPrices,
+          borderColor: '#e76f51',
+          backgroundColor: '#e76f5133',
+          fill: true, tension: 0.3, pointRadius: 8, borderWidth: 3,
+          pointBackgroundColor: '#e76f51', yAxisID: 'y1'
+        },
+        {
+          label: 'Posición OTA (invertida: mayor = mejor)',
+          data: histRanks.map(r => parseFloat((100 - r).toFixed(1))),
+          borderColor: '#2d6a4f',
+          backgroundColor: '#2d6a4f22',
+          fill: true, tension: 0.3, pointRadius: 8, borderWidth: 3,
+          pointBackgroundColor: '#2d6a4f', yAxisID: 'y2'
+        },
+        {
+          label: 'Apariciones totales',
+          data: histApps,
+          borderColor: '#457b9d',
+          backgroundColor: 'transparent',
+          fill: false, tension: 0.3, pointRadius: 6, borderWidth: 2,
+          borderDash: [5,4], pointBackgroundColor: '#457b9d', yAxisID: 'y3'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {position: 'top'},
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: {
+            label: ctx => {
+              if (ctx.datasetIndex === 0) return `Precio: $${ctx.parsed.y.toLocaleString()} USD`;
+              if (ctx.datasetIndex === 1) return `Posición real: #${(100 - ctx.parsed.y).toFixed(1)}`;
+              return `Apariciones: ${ctx.parsed.y}`;
+            }
+          }
+        }
+      },
+      scales: {
+        y1: {position: 'left', title: {display: true, text: 'Precio (USD)'}, grid: {color: '#e8e5df'}},
+        y2: {position: 'right', title: {display: true, text: 'Posición (invertida)'}, min: 50, max: 70, grid: {display: false}},
+        y3: {display: false}
+      }
+    }
+  });
+
+  // 5. Análisis por rangos de precio
+  const rangeLabels = ['Budget (<$700)', 'Mid ($700–$1,100)', 'Upper ($1,100–$1,500)', 'Premium (>$1,500)'];
+  const rangeAvgRank  = [46.1, 57.0, 43.9, 60.8];
+  const rangeAvgApps  = [103,  67,   243,  191];
+  const rangeBrands   = ['MR W + Lumina', 'Kukun', 'ULIV', 'Capitalia'];
+  const rangeColors   = ['#9b5de588', '#e9c46a88', '#2d6a4f88', '#457b9d88'];
+  const rangeBorderColors = ['#9b5de5', '#e9c46a', '#2d6a4f', '#457b9d'];
+  makeChart('chartPriceRanges', {
+    type: 'bar',
+    data: {
+      labels: rangeLabels,
+      datasets: [
+        {
+          label: 'Posición media promedio',
+          data: rangeAvgRank,
+          backgroundColor: rangeColors,
+          borderColor: rangeBorderColors,
+          borderWidth: 2, borderRadius: 8, yAxisID: 'y1'
+        },
+        {
+          label: 'Apariciones promedio',
+          data: rangeAvgApps,
+          type: 'line',
+          borderColor: '#e76f51',
+          backgroundColor: '#e76f5122',
+          fill: false, tension: 0.3, pointRadius: 7, borderWidth: 2.5, yAxisID: 'y2',
+          pointBackgroundColor: rangeBorderColors
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {position: 'top'},
+        tooltip: {
+          callbacks: {
+            afterTitle: items => `Marcas: ${rangeBrands[items[0].dataIndex]}`,
+            label: ctx => ctx.datasetIndex === 0 ? `Posición media: #${ctx.parsed.y}` : `Apariciones: ${ctx.parsed.y}`
+          }
+        }
+      },
+      scales: {
+        y1: {position: 'left', title: {display: true, text: 'Posición media'}, grid: {color: '#e8e5df'}},
+        y2: {position: 'right', title: {display: true, text: 'Apariciones'}, grid: {display: false}}
+      }
+    }
+  });
+
+  // 6. Índice de eficiencia de precio (PPI)
+  // PPI = (100 - rank) × sqrt(reviews) × score / price × 10
+  const ppi = BRANDS.map(b => parseFloat(((100 - rankOverall[b]) * Math.sqrt(avgReviews[b]) * avgScore[b] / avgPrice[b] * 10).toFixed(0)));
+  const brandsByPPI = [...BRANDS].map((b,i) => ({b, v: ppi[i]})).sort((a,c) => c.v - a.v);
+  makeChart('chartPriceEfficiency', {
+    type: 'bar',
+    data: {
+      labels: brandsByPPI.map(x => x.b),
+      datasets: [{
+        label: 'Índice de Eficiencia (mayor = mejor)',
+        data: brandsByPPI.map(x => x.v),
+        backgroundColor: brandsByPPI.map(x => COLORS[x.b] + 'cc'),
+        borderColor: brandsByPPI.map(x => COLORS[x.b]),
+        borderWidth: 2, borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {display: false},
+        tooltip: {callbacks: {label: ctx => `PPI: ${ctx.parsed.y} pts`}}
+      },
+      scales: {y: {title: {display: true, text: 'Índice PPI (posición × reseñas × score / precio)'}, grid: {color: '#e8e5df'}}}
+    }
+  });
+
+  // Price table
+  const priceTableBody = document.getElementById('priceTableBody');
+  if (priceTableBody) {
+    const sortedBrands = [...BRANDS].sort((a,b) => avgPrice[a] - avgPrice[b]);
+    const segments = {MR_W: 'Budget', Lumina: 'Budget', Kukun: 'Mid', ULIV: 'Upper', Capitalia: 'Premium'};
+    const segColors = {Budget: '#d8f3dc', Mid: '#fff3bf', Upper: '#ffd8b1', Premium: '#ffd6d6'};
+    const segTextColors = {Budget: '#1b4332', Mid: '#7d4f00', Upper: '#7c3a00', Premium: '#7c1b1b'};
+    sortedBrands.forEach(b => {
+      const key = b.replace(' ', '_');
+      const seg = segments[key] || 'Mid';
+      const rankCls = rankOverall[b] <= 40 ? 'rank-good' : rankOverall[b] <= 55 ? 'rank-mid' : 'rank-low';
+      priceTableBody.innerHTML += `<tr>
+        <td><strong style="color:${COLORS[b]}">${b}</strong></td>
+        <td style="text-align:center;font-weight:700">$${avgPrice[b].toLocaleString()}</td>
+        <td style="text-align:center"><span class="rank-badge ${rankCls}">#${rankOverall[b]}</span></td>
+        <td style="text-align:center">${avgScore[b]}</td>
+        <td style="text-align:center">${avgReviews[b].toLocaleString()}</td>
+        <td style="text-align:center">${appArr[BRANDS.indexOf(b)]}</td>
+        <td style="text-align:center"><span style="background:${segColors[seg]};color:${segTextColors[seg]};padding:3px 10px;border-radius:10px;font-size:12px;font-weight:700">${seg}</span></td>
+      </tr>`;
+    });
+  }
 }
 
 // INIT
