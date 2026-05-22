@@ -661,7 +661,7 @@
       <div class="kpi-grid" style="grid-template-columns:1fr 1fr;gap:12px">
         <div class="kpi warn"><div class="kpi-label">Apariciones ULIV</div><div class="kpi-value">79</div><div class="kpi-sub">Solo 3 de 5 zonas</div></div>
         <div class="kpi warn"><div class="kpi-label">Posición media ULIV</div><div class="kpi-value">#45.0</div><div class="kpi-sub">vs #41.5 en Expedia</div></div>
-        <div class="kpi"><div class="kpi-label">Precio ULIV</div><div class="kpi-value">$901</div><div class="kpi-sub">Scraping VPN Dallas, TX</div></div>
+        <div class="kpi"><div class="kpi-label">Precio ULIV</div><div class="kpi-value">$808</div><div class="kpi-sub">Mediana · Scraping VPN Dallas, TX</div></div>
         <div class="kpi"><div class="kpi-label">Score ULIV</div><div class="kpi-value">8.57</div><div class="kpi-sub">Segundo más alto · Lumina lidera: 8.78</div></div>
       </div>
     </div>
@@ -670,7 +670,7 @@
       <div class="kpi-grid" style="grid-template-columns:1fr 1fr;gap:12px">
         <div class="kpi"><div class="kpi-label">Apariciones ULIV</div><div class="kpi-value good-val">192</div><div class="kpi-sub">5 de 5 zonas <span class="delta delta-good">+143% vs Booking</span></div></div>
         <div class="kpi"><div class="kpi-label">Posición media ULIV</div><div class="kpi-value good-val">#41.5</div><div class="kpi-sub">Mejor que Booking</div></div>
-        <div class="kpi"><div class="kpi-label">Precio ULIV</div><div class="kpi-value">$1,231</div><div class="kpi-sub">Scraping VPN Dallas, TX</div></div>
+        <div class="kpi"><div class="kpi-label">Precio ULIV</div><div class="kpi-value">$905</div><div class="kpi-sub">Mediana · Scraping VPN Dallas, TX</div></div>
         <div class="kpi"><div class="kpi-label">Score ULIV</div><div class="kpi-value good-val">9.31</div><div class="kpi-sub">Empate con Lumina · Lumina: 9.31</div></div>
       </div>
     </div>
@@ -2539,8 +2539,8 @@ function initCharts() {
     data: {
       labels: ['ULIV — precio medio', 'Mercado — P50'],
       datasets: [
-        {label:'Booking', data:[901, 568], backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
-        {label:'Expedia', data:[1231,766], backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
+        {label:'Booking', data:[808, 568], backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
+        {label:'Expedia', data:[905, 766], backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': $'+c.parsed.y.toLocaleString()}}},scales:{y:{title:{display:true,text:'Precio USD'},grid:{color:'#e8e5df'},ticks:{callback:v=>'$'+v.toLocaleString()}}}}
