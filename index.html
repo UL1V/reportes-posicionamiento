@@ -711,7 +711,7 @@
       <div class="card-title">Score promedio por marca — Booking vs. Expedia</div>
       <div class="card-sub">Las escalas difieren entre OTAs — comparar tendencias relativas dentro de cada OTA</div>
       <div class="chart-wrap"><canvas id="chartOtaScore"></canvas></div>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Expedia puntúa ~0.5–0.7 pts más alto que Booking en todas las marcas. En Expedia, ULIV y Lumina empatan (9.31). En Booking, Lumina lidera (8.78); ULIV queda segundo (8.57). Kukun sigue siendo la más baja en ambas plataformas.</p>
+      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Expedia puntúa ~0.5–0.7 pts más alto que Booking en todas las marcas. En Expedia, ULIV y Lumina empatan (9.31). En Booking, Lumina lidera (8.79); ULIV queda segundo (8.53). Kukun sigue siendo la más baja en ambas plataformas.</p>
     </div>
     <div class="card">
       <div class="card-title">ULIV vs. Mercado — Precio referencial por OTA</div>
@@ -2579,8 +2579,8 @@ function initCharts() {
     data: {
       labels: ['ULIV — precio medio', 'Mercado — P50'],
       datasets: [
-        {label:'Booking', data:[808, 568], backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
-        {label:'Expedia', data:[905, 766], backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
+        {label:'Booking', data:[506, 391], backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
+        {label:'Expedia', data:[630, 506], backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': $'+c.parsed.y.toLocaleString()}}},scales:{y:{title:{display:true,text:'Precio USD'},grid:{color:'#e8e5df'},ticks:{callback:v=>'$'+v.toLocaleString()}}}}
