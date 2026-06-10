@@ -222,8 +222,8 @@
     </div>
     <div class="kpi">
       <div class="kpi-label">Apariciones ULIV top 10</div>
-      <div class="kpi-value">35</div>
-      <div class="kpi-sub">de 239 totales (15%) vs. 44 en May 21 <span class="delta delta-bad">▼ −20%</span></div>
+      <div class="kpi-value" id="kpiUlivTop10">35</div>
+      <div class="kpi-sub" id="kpiUlivTop10Sub">propiedades con posición media ≤ 10 · partido seleccionado</div>
     </div>
     <div class="kpi info">
       <div class="kpi-label">Score promedio ULIV</div>
@@ -2127,6 +2127,11 @@ function loadDate(label) {
   set('kpiUlivScore',    avgScore['ULIV']);
   set('kpiUlivPriceMed', '$' + ulivPriceMed);
   set('kpiUlivApps',     appTotal['ULIV']);
+  // top10 appearances: sum appearances for props with avg_rank ≤ 10
+  const _top10 = (uliv_props||[]).filter(p => p.avg_rank && p.avg_rank <= 10).reduce((a,p) => a+(p.appearances||0), 0);
+  set('kpiUlivTop10', _top10);
+  const _top10sub = document.getElementById('kpiUlivTop10Sub');
+  if (_top10sub) _top10sub.textContent = `posición media ≤ 10 · ${appTotal['ULIV']} apariciones totales · ${label}`;
 
   // OTA KPIs
   set('kpiBkgApps',   otaBooking.appByBrand['ULIV']);
