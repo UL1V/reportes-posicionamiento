@@ -1995,7 +1995,7 @@ function computeGeneral() {
     const byName = {};
     dates.forEach(d => {
       (byDate[d].uliv_props || []).forEach(p => {
-        if (!byName[p.name]) byName[p.name] = { appearances:0, ranks:[], prices:[], medians:[] };
+        if (!byName[p.name]) byName[p.name] = { appearances:0, top10:0, ranks:[], prices:[], medians:[] };
         byName[p.name].appearances += p.appearances || 0;
         byName[p.name].top10 += p.top10 || 0;
         if (p.avg_rank)     byName[p.name].ranks.push(p.avg_rank);
