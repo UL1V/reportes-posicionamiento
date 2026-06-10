@@ -2135,8 +2135,8 @@ function loadDate(label) {
   const _isGeneral = label === 'General';
   const _appsSub = document.getElementById('kpiUlivAppsSub');
   if (_appsSub) _appsSub.textContent = _isGeneral ? `total ${MATCH_DATES.length} partidos` : 'partido seleccionado';
-  // top10 appearances: sum appearances for props with avg_rank ≤ 10
-  const _top10 = (uliv_props||[]).filter(p => p.avg_rank && p.avg_rank <= 10).reduce((a,p) => a+(p.appearances||0), 0);
+  // top10: in General use bestRank (avg_rank is averaged across dates so may exceed 10 even if prop was top10 on some dates)
+  const _top10 = (uliv_props||[]).filter(p => { const r = _isGeneral ? p.bestRank : p.avg_rank; return r && r <= 10; }).reduce((a,p) => a+(p.appearances||0), 0);
   set('kpiUlivTop10', _top10);
   const _top10sub = document.getElementById('kpiUlivTop10Sub');
   if (_top10sub) _top10sub.textContent = _isGeneral
