@@ -2887,6 +2887,7 @@ function initCharts() {
   // Brand legend
   const mktLegendEl = document.getElementById('mktBrandLegend');
   if (mktLegendEl) {
+    mktLegendEl.innerHTML = '';
     mkt.brands.filter(b => b.name !== 'Otros').forEach(b => {
       mktLegendEl.innerHTML += `<span class="legend-item"><span class="legend-dot" style="background:${BRAND_COLORS_MKT[b.name]||'#adb5bd'}"></span>${b.name}</span>`;
     });
