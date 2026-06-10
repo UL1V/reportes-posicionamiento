@@ -2135,13 +2135,14 @@ function loadDate(label) {
   const _isGeneral = label === 'General';
   const _appsSub = document.getElementById('kpiUlivAppsSub');
   if (_appsSub) _appsSub.textContent = _isGeneral ? `total ${MATCH_DATES.length} partidos` : 'partido seleccionado';
-  // top10: in General use bestRank (avg_rank is averaged across dates so may exceed 10 even if prop was top10 on some dates)
-  const _top10 = (uliv_props||[]).filter(p => { const r = _isGeneral ? p.bestRank : p.avg_rank; return r && r <= 10; }).reduce((a,p) => a+(p.appearances||0), 0);
+  // top10: count of distinct ULIV properties in top 10; in General use bestRank
+  const _top10Props = (uliv_props||[]).filter(p => { const r = _isGeneral ? p.bestRank : p.avg_rank; return r && r <= 10; });
+  const _top10 = _top10Props.length;
   set('kpiUlivTop10', _top10);
   const _top10sub = document.getElementById('kpiUlivTop10Sub');
   if (_top10sub) _top10sub.textContent = _isGeneral
-    ? `total ${MATCH_DATES.length} partidos · posición media ≤ 10`
-    : `posición media ≤ 10 · ${appTotal['ULIV']} apariciones totales · ${label}`;
+    ? `propiedades con mejor rank ≤ 10 · ${MATCH_DATES.length} partidos`
+    : `propiedades con posición ≤ 10 · ${label}`;
 
   // OTA KPIs
   set('kpiBkgApps',   otaBooking.appByBrand['ULIV']);
