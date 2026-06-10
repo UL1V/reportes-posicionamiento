@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ULIV — Análisis de Posicionamiento OTA · 04/06/2026</title>
+<title>ULIV — Análisis de Posicionamiento OTA · 09/06/2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
@@ -30,15 +30,15 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  .header { background: var(--uliv); color: white; padding: 28px 40px 24px; }
-  .header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .logo { font-size: 13px; font-weight: 700; letter-spacing: 3px; opacity: .7; }
-  .badge { background: rgba(255,255,255,.15); border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 600; }
+  .header { background: var(--uliv); color: white; padding: 9px 40px 7px; position: sticky; top: 0; z-index: 101; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .logo { font-size: 12px; font-weight: 700; letter-spacing: 3px; opacity: .7; }
+  .badge { background: rgba(255,255,255,.15); border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
   .badge.alert { background: rgba(231,111,81,.4); }
-  .header h1 { font-size: 26px; font-weight: 800; margin-top: 10px; letter-spacing: -.3px; }
-  .header p { opacity: .75; font-size: 14px; margin-top: 4px; }
+  .header h1 { font-size: 15px; font-weight: 800; margin-top: 2px; letter-spacing: -.2px; }
+  .header p { opacity: .75; font-size: 12px; margin-top: 2px; }
 
-  .nav { display: flex; gap: 4px; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; overflow-x: auto; }
+  .nav { display: flex; gap: 4px; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; overflow-x: auto; position: sticky; top: 0; z-index: 100; transition: top .1s; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
   .nav-btn { padding: 14px 20px; font-size: 13.5px; font-weight: 600; color: var(--text2); border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: .2s; }
   .nav-btn:hover { color: var(--uliv); }
   .nav-btn.active { color: var(--uliv); border-bottom-color: var(--uliv); }
@@ -153,6 +153,16 @@
   .alert-banner-text strong { display: block; margin-bottom: 4px; font-size: 15px; }
 
   .footer { text-align: center; padding: 24px; font-size: 12px; color: var(--text2); border-top: 1px solid var(--border); margin-top: 40px; }
+
+  /* Custom date selector */
+  .csel-wrap { position: relative; display: inline-block; }
+  .csel-trigger { background: white; color: #1a1a1a; border: none; border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; min-width: 210px; user-select: none; box-shadow: 0 1px 4px rgba(0,0,0,.2); }
+  .csel-trigger:hover { background: #f0f0f0; }
+  .csel-arrow { font-size: 14px; opacity: .6; }
+  .csel-options { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: white; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,.15); z-index: 300; min-width: 210px; overflow: hidden; }
+  .csel-options.open { display: block; }
+  .csel-opt { padding: 10px 16px; color: #1a1a1a; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; }
+  .csel-opt:hover, .csel-opt.active { background: var(--uliv); color: white; }
 </style>
 </head>
 <body>
@@ -160,10 +170,28 @@
 <div class="header">
   <div class="header-top">
     <span class="logo">ULIV</span>
-    <span class="badge">📊 VPN Dallas, TX · 04/06/2026</span>
+    <span class="badge">📊 VPN Dallas, TX · 09/06/2026</span>
   </div>
-  <h1>ULIV — Análisis de Posicionamiento OTA · 04/06/2026</h1>
-  <p>Scraping del 04/06/2026 · Expedia &amp; Booking · 5 zonas · 3 fechas · 6,000 registros analizados · 6 períodos históricos</p>
+  <h1>ULIV — Análisis de Posicionamiento OTA · 09/06/2026</h1>
+  <p>Scraping del 09/06/2026 · Expedia &amp; Booking · 5 zonas · 5 partidos · 9,919 registros · 7 períodos históricos</p>
+  <div style="margin-top:10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+    <label style="font-size:13px;font-weight:600;opacity:.85">⚽ Partido / Fecha check-in:</label>
+    <div class="csel-wrap" id="dateSelectorWrap">
+      <div class="csel-trigger" onclick="toggleDropdown(event)">
+        <span id="selectedDateLabel">General — Todos los partidos</span>
+        <span class="csel-arrow">▾</span>
+      </div>
+      <div class="csel-options" id="dropdownOptions">
+        <div class="csel-opt active" onclick="selectDate('General','General — Todos los partidos')">General — Todos los partidos</div>
+        <div class="csel-opt" onclick="selectDate('Jun 10','Jun 10–12 · Partido 1')">Jun 10–12 · Partido 1</div>
+        <div class="csel-opt" onclick="selectDate('Jun 16','Jun 16–18 · Partido 2')">Jun 16–18 · Partido 2</div>
+        <div class="csel-opt" onclick="selectDate('Jun 24','Jun 24–26 · Partido 3')">Jun 24–26 · Partido 3</div>
+        <div class="csel-opt" onclick="selectDate('Jun 29','Jun 29–Jul 1 · Partido 4')">Jun 29–Jul 1 · Partido 4</div>
+        <div class="csel-opt" onclick="selectDate('Jul 4','Jul 4–6 · Partido 5')">Jul 4–6 · Partido 5</div>
+      </div>
+    </div>
+    <span style="font-size:12px;opacity:.65">Los datos de cada sección reflejan la fecha seleccionada</span>
+  </div>
 </div>
 
 <div class="nav">
@@ -183,18 +211,13 @@
 
 <!-- ===== OVERVIEW ===== -->
 <div class="section active" id="overview">
-  <div class="sec-title">Panorama General — 4 de Junio 2026 · Mundial 2026</div>
-  <div class="sec-sub">Condiciones del scraping: Booking + Expedia · Chrome + Edge incógnito · Top 100 resultados por búsqueda · VPN con ubicación en Dallas, TX, Estados Unidos · 6° período de medición histórico · semana previa al Mundial 2026</div>
+  <div class="sec-title">Panorama General — <span id="currentDateTitle">Jun 10</span> · Mundial 2026</div>
+  <div class="sec-sub">Condiciones del scraping: Booking + Expedia · Chrome + Edge incógnito · Top 100 resultados por búsqueda · VPN con ubicación en Dallas, TX, EE.UU. · 7° período de medición histórico · Mundial 2026 en curso</div>
 
   <div class="kpi-grid">
-    <div class="kpi warn">
-      <div class="kpi-label">Registros totales</div>
-      <div class="kpi-value">6,000</div>
-      <div class="kpi-sub">2 OTAs × 2 browsers × 5 zonas × 3 fechas Copa del Mundo</div>
-    </div>
-    <div class="kpi">
+<div class="kpi">
       <div class="kpi-label">Posición media ULIV</div>
-      <div class="kpi-value good-val">#41.5</div>
+      <div class="kpi-value good-val" id="kpiUlivRank">#39.9</div>
       <div class="kpi-sub">leve mejora · Condesa sube a #21.4 <span class="delta delta-good">▼ −0.8</span></div>
     </div>
     <div class="kpi">
@@ -204,18 +227,18 @@
     </div>
     <div class="kpi info">
       <div class="kpi-label">Score promedio ULIV</div>
-      <div class="kpi-value good-val">9.04</div>
+      <div class="kpi-value good-val" id="kpiUlivScore">8.9</div>
       <div class="kpi-sub">Líder del mercado 6° período <span class="delta delta-neutral">▼ −0.05</span></div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Precio mediano ULIV</div>
-      <div class="kpi-value good-val">$598</div>
+      <div class="kpi-value good-val" id="kpiUlivPriceMed">$716</div>
       <div class="kpi-sub">Mediana mercado: $450 · mínimo histórico <span class="delta delta-good">▼ −31%</span></div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Apariciones totales ULIV</div>
-      <div class="kpi-value">239</div>
-      <div class="kpi-sub">vs. 271 en May 21 · retroceso leve <span class="delta delta-bad">▼ −12%</span></div>
+      <div class="kpi-value" id="kpiUlivApps">78</div>
+      <div class="kpi-sub">partido seleccionado</div>
     </div>
   </div>
 
@@ -238,7 +261,7 @@
     <div class="method-item">
       <div class="method-icon">📅</div>
       <div class="method-label">Fechas check-in</div>
-      <div class="method-value">Jun 10, 16, 24</div>
+      <div class="method-value">Jun 10, 16, 24, 29 · Jul 4</div>
     </div>
     <div class="method-item">
       <div class="method-icon">🏆</div>
@@ -298,36 +321,7 @@
   <div class="sec-title">Posicionamiento por Zona</div>
   <div class="sec-sub">Posición media en el top 100 por zona de búsqueda — cuanto más bajo el número, mejor la posición</div>
 
-  <div class="insights" style="margin-bottom:24px">
-    <div class="insight positive">
-      <div class="insight-icon">🏙️</div>
-      <div>
-        <div class="insight-title">CDMX retrocede a #66.6 — reversión del #18.0 histórico de May21</div>
-        <div class="insight-text">En búsqueda genérica de Ciudad de México, ULIV cae de #18.0 (May21) a #66.6 — una reversión de 48 posiciones en 14 días, con apariciones bajando de 40 a 34. Esta volatilidad extrema sugiere que el resultado de mayo fue excepcional. Los competidores también caen: Lumina #56.3, Capitalia #61.3, lo que indica que la zona genérica CDMX es estructuralmente difícil para propiedades no ubicadas en el centro histórico.</div>
-      </div>
-    </div>
-    <div class="insight warning">
-      <div class="insight-icon">📍</div>
-      <div>
-        <div class="insight-title">Condesa: ULIV llega a #21.4 — mejor resultado zonal en 6 períodos</div>
-        <div class="insight-text">ULIV mejora drásticamente en Condesa: de #37.0 (May21) a #21.4 — una ganancia de 15.6 posiciones y el mejor resultado zonal de todo el histórico. Con 46 apariciones, la calidad supera al volumen previo. Lumina también mejora a #25.9, por lo que ULIV ahora supera a Lumina en Condesa por primera vez. Esta es la mayor mejora de ULIV en cualquier zona en cualquier período.</div>
-      </div>
-    </div>
-    <div class="insight positive">
-      <div class="insight-icon">📌</div>
-      <div>
-        <div class="insight-title">Polanco: posición mejora a #45.3 con 113 apariciones sólidas</div>
-        <div class="insight-text">Polanco sigue siendo la zona con mayor densidad de listings ULIV (113 apariciones, ligera baja desde el máximo de 118 en May21). La posición mejora de #47.0 a #45.3 — segundo mejor resultado en esta zona. Para las fechas del Mundial, Polanco sigue siendo el campo de batalla principal: 10+ propiedades ULIV tienen visibilidad activa en los primeros 100 resultados.</div>
-      </div>
-    </div>
-    <div class="insight info">
-      <div class="insight-icon">🔍</div>
-      <div>
-        <div class="insight-title">Roma Norte: ULIV sube a #33.5 — segunda mejor zona del período</div>
-        <div class="insight-text">ULIV mejora de #42.0 (May21) a #33.5 en Roma Norte — una ganancia de 8.5 posiciones y el segundo mejor resultado del período. Lumina domina aún más (#19.4), ampliando la brecha. Con 46 apariciones (−7 vs May21), Roma es la segunda zona más activa junto a Condesa. La combinación Condesa #21.4 y Roma #33.5 es el mejor desempeño de zonas premium para ULIV en el histórico.</div>
-      </div>
-    </div>
-  </div>
+  <div class="insights" id="posicionInsights" style="margin-bottom:24px"></div>
 
   <div class="card">
     <div class="card-title">Heatmap de Posición Media por Marca y Zona</div>
@@ -353,44 +347,23 @@
     <div class="card-title">Posición por Zona — Comparativa Visual</div>
     <div class="card-sub">Barras horizontales: posición media por zona (menor = mejor)</div>
     <div class="chart-wrap"><canvas id="chartByZone"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Condesa es la gran sorpresa: ULIV llega a #21.4 — mejor resultado en esa zona en 6 períodos. CDMX retrocede a #66.6 (vs #18.0 May21). Lumina domina Roma (#19.4) y Condesa (#25.9). Azteca: 0 apariciones ULIV en el período.</p>
+    <p id="zoneChartNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
   </div>
 
   <div class="card">
     <div class="card-title">Apariciones ULIV por zona (Top 100)</div>
     <div class="card-sub">Total de veces que aparece cualquier propiedad ULIV en los primeros 100 resultados, por zona — Jun 4.</div>
     <div class="chart-wrap"><canvas id="chartAppearances"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Polanco baja levemente de 118 a 113. Condesa cae de 56 a 46. CDMX retrocede de 40 a 34. Roma baja de 53 a 46. Azteca: 0 apariciones. Caída general de visibilidad por zona con el precio en mínimo histórico.</p>
+    <p id="appsChartNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
   </div>
 </div>
 
 <!-- ===== PROPIEDADES ===== -->
 <div class="section" id="propiedades">
   <div class="sec-title">Propiedades ULIV</div>
-  <div class="sec-sub">Rendimiento individual de cada propiedad en las búsquedas del 04/06/2026</div>
+  <div class="sec-sub">Rendimiento individual de cada propiedad en las búsquedas del 09/06/2026</div>
 
-  <div class="kpi-grid">
-    <div class="kpi">
-      <div class="kpi-label">Propiedades únicas detectadas</div>
-      <div class="kpi-value">16</div>
-      <div class="kpi-sub">a través de todas las búsquedas</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Mejor posición media</div>
-      <div class="kpi-value good-val">#18.4</div>
-      <div class="kpi-sub">ULIV Parque Lincoln — líder del portafolio 3° período</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Propiedad más frecuente</div>
-      <div class="kpi-value">Parque Lincoln</div>
-      <div class="kpi-sub">ULIV Parque Lincoln · 26 apariciones en top 100</div>
-    </div>
-    <div class="kpi info">
-      <div class="kpi-label">Apariciones en top 20</div>
-      <div class="kpi-value good-val">67</div>
-      <div class="kpi-sub">de 239 totales = 28% <span class="delta delta-good">▲ +2 vs May 21</span></div>
-    </div>
-  </div>
+  <div class="kpi-grid" id="propsKpiGrid"></div>
 
   <div class="alert-banner" style="background:#fff8e1;border-color:#e9c46a;">
     <div class="alert-banner-icon">⚠️</div>
@@ -400,29 +373,7 @@
     </div>
   </div>
 
-  <div class="insights" style="margin-bottom:24px">
-    <div class="insight positive">
-      <div class="insight-icon">🏆</div>
-      <div>
-        <div class="insight-title">Top 3 de calidad: Parque Lincoln, Mexico City, Condesa</div>
-        <div class="insight-text">Las tres propiedades con mejor posición son ULIV Parque Lincoln (#19.5), ULIV Mexico City (#32.0) y ULIV Condesa (#32.0). Parque Lincoln lidera el portafolio combinando 32 apariciones con la mejor posición media — el balance óptimo. Condesa tiene pocas apariciones (12) pero cuando aparece lo hace en posiciones destacadas.</div>
-      </div>
-    </div>
-    <div class="insight info">
-      <div class="insight-icon">🔢</div>
-      <div>
-        <div class="insight-title">Mexico City: ancla de CDMX con 22 apariciones</div>
-        <div class="insight-text">ULIV Mexico City tiene 22 apariciones y posición media #32.0. Con el crecimiento de CDMX (+100% apariciones vs May 14), es el listing clave para búsquedas genéricas de la ciudad. Comparado con Capitalia que tiene muchas apariciones pero posiciones muy bajas, Mexico City logra un equilibrio razonable. Su optimización es la palanca más directa para mejorar el ranking en CDMX.</div>
-      </div>
-    </div>
-    <div class="insight warning">
-      <div class="insight-icon">⚠️</div>
-      <div>
-        <div class="insight-title">Propiedades con posición >50 que requieren atención</div>
-        <div class="insight-text">ULIV Roma Norte (#55.0), ULIV Edgar Allan Poe (#54.0) y ULIV Parque México (#51.5) tienen las posiciones más bajas del portafolio. ULIV Park Polanco mejoró significativamente de #62.6 a #46.0 este período. Con posición media superior a 50 tienen visibilidad reducida para la mayoría de los usuarios. Si el objetivo es el Mundial, estas propiedades requieren revisión de precio, disponibilidad, fotos y valoración para las fechas de junio.</div>
-      </div>
-    </div>
-  </div>
+  <div class="insights" id="propsInsights" style="margin-bottom:24px"></div>
 
   <div class="card">
     <div class="card-title">Tabla de Propiedades ULIV — Frecuencia y Posición</div>
@@ -441,7 +392,7 @@
         </thead>
         <tbody id="propsTableBody"></tbody>
       </table>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">UTOPIC Campos Elíseos ($1,434 mediana) jala el precio promedio de ULIV hacia arriba — es la propiedad más cara del portafolio. Collections by ULIV Palacio ($1,430 mediana) también está entre las más caras. En el extremo opuesto, ULIV Roma Norte ($622), ULIV Condesa ($656) y ULIV Pulse Roma ($747) son las más económicas.</p>
+      <p id="propsTableNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
   </div>
 
@@ -450,13 +401,13 @@
       <div class="card-title">Apariciones por propiedad</div>
       <div class="card-sub">Número de veces que aparece en el top 100</div>
       <div class="chart-wrap"><canvas id="chartPropsFreq"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">ULIV Parque Lincoln lidera con 32 apariciones, seguido de ULIV Pulse Roma-Condesa (28) y Collections by ULIV Palacio (26). ULIV Cibeles (22) y ULIV Mexico City (22) completan el top 5. ULIV Polanco apenas aparece 4 veces — la propiedad con menor visibilidad del portafolio.</p>
+    <p id="propsFreqNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
     <div class="card">
       <div class="card-title">Posición media por propiedad</div>
       <div class="card-sub">Menor = mejor posición en los resultados</div>
       <div class="chart-wrap"><canvas id="chartPropsRank"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">ULIV Parque Lincoln es el mejor resultado individual del portafolio (#19.5). ULIV Mexico City (#32.0) y ULIV Condesa (#32.0) también rankean bien. ULIV Roma Norte (#55.0) y ULIV Edgar Allan Poe (#54.0) son las propiedades que más necesitan atención en este período.</p>
+    <p id="propsRankNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
   </div>
 </div>
@@ -464,44 +415,15 @@
 <!-- ===== COMPETENCIA ===== -->
 <div class="section" id="competencia">
   <div class="sec-title">Análisis Competitivo</div>
-  <div class="sec-sub">ULIV vs. Lumina, Capitalia, Kukun y MR W · Scraping 04/06/2026</div>
+  <div class="sec-sub">ULIV vs. Lumina, Capitalia, Kukun y MR W · Scraping 09/06/2026</div>
 
-  <div class="insights" style="margin-bottom:24px">
-    <div class="insight warning">
-      <div class="insight-icon">⚔️</div>
-      <div>
-        <div class="insight-title">Lumina: #37.7 con 172 apps — crece en volumen y posición simultáneamente</div>
-        <div class="insight-text">Lumina mejora a #37.7 y crece a 172 apariciones (+41 vs May21, máximo histórico). Aunque ULIV supera a Lumina en Condesa (#21.4 vs #25.9) y está casi empatado en Polanco (#45.3 vs #47.2), Lumina domina Roma Norte (#19.4 vs #33.5) y CDMX (#56.3 vs #66.6). Con precio $476 y score 9.00, su propuesta precio-calidad sigue siendo la más competitiva del mercado.</div>
-      </div>
-    </div>
-    <div class="insight positive">
-      <div class="insight-icon">🛡️</div>
-      <div>
-        <div class="insight-title">ULIV lidera en reviews: 542 promedio vs. Kukun (177) — ventaja 3×</div>
-        <div class="insight-text">ULIV (542 reseñas promedio) supera a todos los competidores: Kukun (177), Capitalia (146), MR W (116), Lumina (114). La correlación reviews-ranking (−0.151) es la más alta de las correlaciones medidas: más reseñas están estadísticamente asociadas con mejor posición. La profundidad acumulada de ULIV es el activo competitivo más difícil de replicar a corto plazo.</div>
-      </div>
-    </div>
-    <div class="insight info">
-      <div class="insight-icon">📈</div>
-      <div>
-        <div class="insight-title">MR W se estabiliza a #51.8 — sin tendencia de mejora clara</div>
-        <div class="insight-text">MR W mejora marginalmente de #52.1 (May21) a #51.8 (Jun4), con 102 apariciones (−20 vs May21). Después de su racha de mejora hasta May14 (#47.3), MR W parece haber encontrado un techo orgánico alrededor de #51-52. Con precio $417 (el más bajo del mercado) y score 8.84, mantiene la propuesta más accesible, pero la caída de volumen limita su impacto competitivo.</div>
-      </div>
-    </div>
-    <div class="insight neutral" style="border-left:4px solid var(--neutral)">
-      <div class="insight-icon">📉</div>
-      <div>
-        <div class="insight-title">Capitalia recupera #50.6 con 305 apps — volumen récord, posición oscilante</div>
-        <div class="insight-text">Capitalia mejora de #56.5 a #50.6 y alcanza 305 apariciones — su nuevo máximo histórico, y la mejora de posición más grande del período (+5.9). Sin embargo, en 6 períodos: #49.7→#53.8→#60.8→#51.7→#56.5→#50.6, el patrón oscilante persiste. Con precio $935 y score 8.82, es la propuesta precio-calidad más cara con el menor retorno de posicionamiento relativo a precio.</div>
-      </div>
-    </div>
-  </div>
+  <div class="insights" id="compInsights" style="margin-bottom:24px"></div>
 
   <div class="card">
     <div class="card-title">Apariciones en top 100 por fecha check-in y marca</div>
     <div class="card-sub">Cuántas veces aparece cada marca en los primeros 100 resultados según la fecha del partido</div>
     <div class="chart-wrap"><canvas id="chartCompCount"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Capitalia domina en volumen (130/96/79) pero cae drásticamente hacia Jun 24. ULIV con 82/86/71. Lumina sigue siendo la única que sube hacia Jun 24 (56/57/59). Kukun y MR W son los más estables pero con menor volumen.</p>
+    <p id="compCountNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
   </div>
 
   <div class="grid2">
@@ -509,13 +431,13 @@
       <div class="card-title">Precio promedio por marca (USD)</div>
       <div class="card-sub">Precio total promedio por estancia para las fechas analizadas</div>
       <div class="chart-wrap"><canvas id="chartCompPrice"></canvas></div>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">MR W ($417) y Lumina ($476) son los más baratos. ULIV ($687) se acerca al segmento competitivo. Capitalia ($935) y Kukun ($724) mantienen precios altos con posicionamiento débil. La convergencia de precios entre marcas es la mayor del histórico.</p>
+      <p id="compPriceNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
     <div class="card">
       <div class="card-title">Score promedio por marca</div>
       <div class="card-sub">Calificación promedio en la OTA (escala 1–10)</div>
       <div class="chart-wrap"><canvas id="chartCompScore"></canvas></div>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">ULIV (9.04) lidera sobre Lumina (9.00). MR W (8.84) supera a Capitalia (8.82). Kukun (8.42) es la más baja. La brecha ULIV-Kukun es 0.62 pts — ligeramente más amplia que el período anterior.</p>
+      <p id="compScoreNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
   </div>
 
@@ -529,64 +451,28 @@
 <!-- ===== TEMPORAL ===== -->
 <div class="section" id="temporal">
   <div class="sec-title">Evolución Temporal</div>
-  <div class="sec-sub">Cómo cambia el posicionamiento entre las 3 fechas check-in analizadas (partidos del Mundial)</div>
+  <div class="sec-sub">Cómo cambia el posicionamiento entre los 5 partidos del Mundial analizados (Jun 10 · Jun 16 · Jun 24 · Jun 29 · Jul 4)</div>
 
   <div class="card">
     <div class="card-title">Tendencia de Posición Media por Fecha Check-in</div>
     <div class="card-sub">Eje Y: posición media (más bajo = mejor) · Se ve cómo evoluciona cada marca según la fecha de estancia</div>
     <div class="chart-wrap"><canvas id="chartTrend"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">ULIV mejora hacia fechas tardías (Jun10: #46.6, Jun16: #39.1, Jun24: #38.4) — patrón invertido al período anterior. Capitalia tiene la mayor mejora: #51.3→#48.0. Kukun empeora drásticamente hacia Jun 24 (#66.3). Lumina sigue siendo la única con tendencia creciente de volumen.</p>
+    <p id="trendNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
   </div>
 
   <div class="card">
     <div class="card-title">Apariciones en Top 100 por Fecha Check-in</div>
     <div class="card-sub">Visibilidad total de cada marca según la fecha de estancia buscada</div>
     <div class="chart-wrap"><canvas id="chartTrendCount"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">ULIV pierde 11 apariciones de Jun 10 a Jun 24 (82→71). Capitalia domina pero cae fuerte (130→79). Lumina es la única marca que sube hacia Jun 24 (56→59). Kukun y MR W mantienen volumen bajo pero estable.</p>
+    <p id="trendCountNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
   </div>
 
-  <div class="insights">
-    <div class="insight positive">
-      <div class="insight-icon">📈</div>
-      <div>
-        <div class="insight-title">ULIV mejora progresivamente hacia Jun 24 — patrón inverso al período anterior</div>
-        <div class="insight-text">ULIV muestra el mejor patrón temporal del período: posición mejora de #46.6 (Jun10) a #39.1 (Jun16) a #38.4 (Jun24) — tendencia inversa a May21. Jun 24 tiene la mejor posición y coincide con los partidos finales de grupo (Jun 22–26). La tendencia sugiere que ULIV mantiene precio competitivo y disponibilidad hacia las fechas de mayor demanda.</div>
-      </div>
-    </div>
-    <div class="insight warning">
-      <div class="insight-icon">🔴</div>
-      <div>
-        <div class="insight-title">Kukun empeora drásticamente hacia Jun 24 (#66.3) — mayor deterioro del período</div>
-        <div class="insight-text">Kukun muestra el peor patrón temporal: empeora de #51.0 (Jun10) a #58.4 (Jun16) a #66.3 (Jun24) — una caída de 15.3 posiciones hacia el pico del Mundial. Sus apariciones son las más estables (42→46→44), lo que sugiere que la caída de posición se debe a precio menos competitivo conforme se acerca el torneo, no a menor disponibilidad.</div>
-      </div>
-    </div>
-    <div class="insight info">
-      <div class="insight-icon">📉</div>
-      <div>
-        <div class="insight-title">Capitalia: mayor mejora temporal del mercado (#51.3→#48.0 hacia Jun24)</div>
-        <div class="insight-text">Capitalia muestra la mejor tendencia temporal: mejora de #51.3 (Jun10) a #51.7 (Jun16) a #48.0 (Jun24), superando a ULIV hacia las fechas tardías. Sin embargo, sus apariciones caen de 130 a 79 (−39%) — la mayor caída de volumen del mercado. El alto volumen inicial que colapsa hacia Jun24 sugiere disponibilidad o precio no sostenido para el pico del torneo.</div>
-      </div>
-    </div>
-    <div class="insight positive">
-      <div class="insight-icon">📅</div>
-      <div>
-        <div class="insight-title">Lumina: única marca con volumen creciente hacia Jun 24 (56→57→59)</div>
-        <div class="insight-text">Lumina es la única marca que aumenta sus apariciones hacia Jun 24 (56→57→59), mientras todas las demás caen. Su posición mejora de Jun10 (#37.9) a Jun16 (#34.2), aunque sube a #40.9 en Jun24. El volumen sostenido y creciente sugiere mayor disponibilidad mantenida y precio estable para las fechas tardías del torneo — el mejor perfil temporal del período.</div>
-      </div>
-    </div>
-    <div class="insight info">
-      <div class="insight-icon">🏆</div>
-      <div>
-        <div class="insight-title">Jun 24 concentra el mejor posicionamiento de ULIV (#38.4) — patrón invertido</div>
-        <div class="insight-text">En este período, ULIV posiciona mejor para Jun 24 (#38.4) que para Jun 16 (#39.1) y Jun 10 (#46.6) — el patrón inverso a May21. Las apariciones disminuyen hacia Jun24 (82→86→71) pero la calidad de posición mejora. La tendencia indica que ULIV mantiene precio competitivo para el pico del Mundial, lo que es la señal de inventario más positiva del período.</div>
-      </div>
-    </div>
-  </div>
+  <div class="insights" id="temporalInsights"></div>
 </div>
 
 <!-- ===== AZTECA ===== -->
 <div class="section" id="azteca">
-  <div class="sec-title">🏟️ Estadio Azteca — Análisis 04/06/2026</div>
+  <div class="sec-title">🏟️ Estadio Azteca — Análisis 09/06/2026</div>
   <div class="sec-sub">ULIV ausente en Azteca · Mundial inicia Jun 10 — 6 días restantes</div>
 
   <div class="kpi-grid">
@@ -653,25 +539,25 @@
 <!-- ===== OTAs ===== -->
 <div class="section" id="otas">
   <div class="sec-title">Booking vs. Expedia — Análisis por OTA</div>
-  <div class="sec-sub">Comparación de posicionamiento, apariciones, precios y scores entre las dos plataformas · 04/06/2026</div>
+  <div class="sec-sub">Comparación de posicionamiento, apariciones, precios y scores entre las dos plataformas · 09/06/2026</div>
 
   <div class="grid2" style="margin-bottom:24px">
     <div class="card" style="border-top:4px solid #003580">
       <div style="font-size:13px;font-weight:800;color:#003580;letter-spacing:1px;margin-bottom:16px">📘 BOOKING</div>
       <div class="kpi-grid" style="grid-template-columns:1fr 1fr;gap:12px">
-        <div class="kpi warn"><div class="kpi-label">Apariciones ULIV</div><div class="kpi-value">83</div><div class="kpi-sub">Solo 4 de 5 zonas</div></div>
-        <div class="kpi warn"><div class="kpi-label">Posición media ULIV</div><div class="kpi-value">#36.3</div><div class="kpi-sub">vs #44.2 en Expedia</div></div>
-        <div class="kpi"><div class="kpi-label">Precio ULIV</div><div class="kpi-value">$506</div><div class="kpi-sub">Mediana · Scraping VPN Dallas, TX</div></div>
-        <div class="kpi"><div class="kpi-label">Score ULIV</div><div class="kpi-value">8.53</div><div class="kpi-sub">Segundo más alto · Lumina lidera: 8.79</div></div>
+        <div class="kpi warn"><div class="kpi-label">Apariciones ULIV</div><div class="kpi-value" id="kpiBkgApps">24</div><div class="kpi-sub">fecha seleccionada</div></div>
+        <div class="kpi warn"><div class="kpi-label">Posición media ULIV</div><div class="kpi-value" id="kpiBkgRank">#35.1</div><div class="kpi-sub">Booking · fecha seleccionada</div></div>
+        <div class="kpi"><div class="kpi-label">Precio ULIV</div><div class="kpi-value" id="kpiBkgPrice">$644</div><div class="kpi-sub">Mediana · VPN Dallas, TX</div></div>
+        <div class="kpi"><div class="kpi-label">Score ULIV</div><div class="kpi-value" id="kpiBkgScore">8.5</div><div class="kpi-sub">Fecha seleccionada</div></div>
       </div>
     </div>
     <div class="card" style="border-top:4px solid #c8900a">
       <div style="font-size:13px;font-weight:800;color:#c8900a;letter-spacing:1px;margin-bottom:16px">💛 EXPEDIA</div>
       <div class="kpi-grid" style="grid-template-columns:1fr 1fr;gap:12px">
-        <div class="kpi"><div class="kpi-label">Apariciones ULIV</div><div class="kpi-value good-val">156</div><div class="kpi-sub">4 de 5 zonas <span class="delta delta-good">+88% vs Booking</span></div></div>
-        <div class="kpi"><div class="kpi-label">Posición media ULIV</div><div class="kpi-value good-val">#44.2</div><div class="kpi-sub">Booking lidera con #36.3</div></div>
-        <div class="kpi"><div class="kpi-label">Precio ULIV</div><div class="kpi-value">$630</div><div class="kpi-sub">Mediana · Scraping VPN Dallas, TX</div></div>
-        <div class="kpi"><div class="kpi-label">Score ULIV</div><div class="kpi-value good-val">9.31</div><div class="kpi-sub">Más alto del mercado · Lumina: 9.1</div></div>
+        <div class="kpi"><div class="kpi-label">Apariciones ULIV</div><div class="kpi-value good-val" id="kpiExpApps">54</div><div class="kpi-sub">fecha seleccionada</div></div>
+        <div class="kpi"><div class="kpi-label">Posición media ULIV</div><div class="kpi-value good-val" id="kpiExpRank">#42.0</div><div class="kpi-sub">Expedia · fecha seleccionada</div></div>
+        <div class="kpi"><div class="kpi-label">Precio ULIV</div><div class="kpi-value" id="kpiExpPrice">$824</div><div class="kpi-sub">Mediana · VPN Dallas, TX</div></div>
+        <div class="kpi"><div class="kpi-label">Score ULIV</div><div class="kpi-value good-val" id="kpiExpScore">9.3</div><div class="kpi-sub">Fecha seleccionada</div></div>
       </div>
     </div>
   </div>
@@ -681,13 +567,13 @@
       <div class="card-title">Posición media por marca — Booking vs. Expedia</div>
       <div class="card-sub">Menor = mejor posición en resultados de búsqueda</div>
       <div class="chart-wrap"><canvas id="chartOtaRank"></canvas></div>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">ULIV tiene mejor posición en Booking (#36.3) que en Expedia (#44.2) — inversión histórica. Lumina lidera en ambas: Expedia #38.9, Booking #35.1. Capitalia domina Booking (196 apps, #53.9) pero es competitiva en Expedia (#44.7).</p>
+      <p id="otaRankNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
     <div class="card">
       <div class="card-title">Apariciones totales por marca — Booking vs. Expedia</div>
       <div class="card-sub">Número de veces que cada marca apareció en el top 100</div>
       <div class="chart-wrap"><canvas id="chartOtaApp"></canvas></div>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">ULIV domina Expedia con 156 vs 83 en Booking. Capitalia lidera Booking con 196 apps. Lumina crece a 120 en Expedia. Kukun equilibrado: 86 Booking, 46 Expedia. Azteca: 0 apariciones en ambas plataformas.</p>
+      <p id="otaAppNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
   </div>
 
@@ -696,13 +582,13 @@
       <div class="card-title">ULIV — Apariciones por zona en cada OTA</div>
       <div class="card-sub">Presencia en el top 100 por zona de búsqueda</div>
       <div class="chart-wrap"><canvas id="chartOtaUlivZoneApp"></canvas></div>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">ULIV casi ausente en CDMX en Booking (1 app) y con 33 en Expedia. Polanco: 73 Expedia vs 40 Booking. Condesa: 28 Expedia vs 18 Booking. Azteca: 0 en ambas plataformas por primera vez.</p>
+      <p id="otaZoneAppNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
     <div class="card">
       <div class="card-title">ULIV — Posición media por zona en cada OTA</div>
       <div class="card-sub">Ranking promedio (menor = mejor). Sin barra = ULIV no aparece en esa zona</div>
       <div class="chart-wrap"><canvas id="chartOtaUlivZoneRank"></canvas></div>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Condesa Expedia: #13.8 — el mejor posicionamiento zonal de ULIV en toda la historia del reporte. Polanco: Booking #38.5 supera a Expedia #49. Roma: Booking #32.8 vs Expedia #34.3. CDMX solo Expedia #65.9.</p>
+      <p id="otaZoneRankNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
   </div>
 
@@ -711,13 +597,13 @@
       <div class="card-title">Score promedio por marca — Booking vs. Expedia</div>
       <div class="card-sub">Las escalas difieren entre OTAs — comparar tendencias relativas dentro de cada OTA</div>
       <div class="chart-wrap"><canvas id="chartOtaScore"></canvas></div>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Expedia puntúa ~0.5–0.7 pts más alto que Booking en todas las marcas. En Expedia, ULIV y Lumina empatan (9.31). En Booking, Lumina lidera (8.79); ULIV queda segundo (8.53). Kukun sigue siendo la más baja en ambas plataformas.</p>
+      <p id="otaScoreNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
     <div class="card">
       <div class="card-title">ULIV vs. Mercado — Precio referencial por OTA</div>
       <div class="card-sub">Nota: los precios de Booking se capturaron con VPN (Dallas, TX) y pueden no incluir impuestos locales — comparar tendencias, no valores absolutos</div>
       <div class="chart-wrap"><canvas id="chartOtaPrice"></canvas></div>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Precios referenciales. ULIV ($630 Expedia, $506 Booking) está por encima de las medianas del mercado en ambas OTAs ($506 Expedia, $391 Booking). Con precio ULIV en mínimos históricos, la brecha sobre el mercado es la menor registrada.</p>
+      <p id="otaPriceNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
   </div>
 
@@ -725,104 +611,75 @@
     <div class="card-title">Precio mediano del mercado por zona — Booking vs. Expedia</div>
     <div class="card-sub">Referencial — la diferencia entre OTAs puede deberse a la VPN y a si los impuestos están incluidos o no en cada plataforma</div>
     <div class="chart-wrap"><canvas id="chartOtaMarketZone"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Polanco ($777 Booking vs $675 Expedia) — el único caso donde Booking es más caro. Roma ($364 Booking vs $516 Expedia) muestra la mayor brecha. Azteca: sin datos en ninguna plataforma por primera vez en el histórico.</p>
+    <p id="otaMarketZoneNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
   </div>
 
-  <div class="insights">
-    <div class="insight danger">
-      <div class="insight-icon">⚠️</div>
-      <div>
-        <div class="insight-title">ULIV invisible en Booking CDMX y Azteca</div>
-        <div class="insight-text">ULIV casi ausente en Booking CDMX (1 aparición, #89.0) y con 0 en Azteca en ambas plataformas. En Expedia registra 33 en CDMX (#65.9) pero también 0 en Azteca. Con el Mundial iniciando en 6 días, la ausencia en Azteca en ambas OTAs es la brecha de visibilidad más urgente.</div>
-      </div>
-    </div>
-    <div class="insight positive">
-      <div class="insight-icon">✅</div>
-      <div>
-        <div class="insight-title">Expedia es la plataforma clave de ULIV</div>
-        <div class="insight-text">88% más apariciones en Expedia (156 vs 83 en Booking), y mejor posición en Booking (#36.3 vs #44.2 en Expedia). Las dos OTAs son complementarias: Expedia da volumen, Booking da calidad de posición. Booking solo tiene 4 zonas activas (sin CDMX relevante: 1 app en #89).</div>
-      </div>
-    </div>
-    <div class="insight warning">
-      <div class="insight-icon">💰</div>
-      <div>
-        <div class="insight-title">Precios referenciales — comparar con cautela</div>
-        <div class="insight-text">Los precios difieren entre OTAs porque el scraping de Booking se realizó con VPN en Dallas, TX, lo que puede excluir impuestos locales. Use los datos de precio para entender posicionamiento relativo de ULIV dentro de cada plataforma, no para comparar precios absolutos entre ellas.</div>
-      </div>
-    </div>
-    <div class="insight info">
-      <div class="insight-icon">📉</div>
-      <div>
-        <div class="insight-title">Competidores difieren según la OTA</div>
-        <div class="insight-text">En Booking, Capitalia (196 apps) domina el volumen; Kukun (86) es la segunda amenaza. En Expedia, Lumina (120 apps) es el competidor más consistente y Capitalia baja a 109. Kukun equilibra ambas plataformas (86 Booking, 46 Expedia) mientras MR W tiene baja presencia en ambas (61 y 41).</div>
-      </div>
-    </div>
-  </div>
+  <div class="insights" id="otaInsights"></div>
 </div>
 
 <!-- ===== HISTÓRICO ===== -->
 <div class="section" id="historico">
   <div class="sec-title">Comparativa Histórica</div>
-  <div class="sec-sub">Evolución del posicionamiento ULIV en los seis scraping disponibles: 27/03/2026, 09/04/2026, 07/05/2026, 14/05/2026, 21/05/2026 y 04/06/2026</div>
+  <div class="sec-sub">Evolución del posicionamiento ULIV en los siete scraping disponibles: 27/03, 09/04, 07/05, 14/05, 21/05, 04/06 y 09/06/2026</div>
 
   <div class="kpi-grid">
     <div class="kpi">
       <div class="kpi-label">Posición media ULIV</div>
-      <div class="kpi-value good-val">#39.2 → #41.5</div>
-      <div class="kpi-sub">Mar 27 → Jun 4 · sexto período · tendencia positiva <span class="delta delta-good">↗ progreso</span></div>
+      <div class="kpi-value good-val">#39.2 → #43.7</div>
+      <div class="kpi-sub">Mar 27 → Jun 9 · séptimo período · 7 mediciones <span class="delta delta-neutral">↔</span></div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">Apariciones totales</div>
-      <div class="kpi-value good-val">186 → 271</div>
-      <div class="kpi-sub">Mínimo abr (186) · máximo May21 (271) · Jun 4: 239 <span class="delta delta-neutral">↔ consolidado</span></div>
+      <div class="kpi-label">Apariciones por período</div>
+      <div class="kpi-value good-val">186 → 406</div>
+      <div class="kpi-sub">Mínimo abr (186) · Jun 9: 406 (5 partidos) <span class="delta delta-good">↗ máximo</span></div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">Apariciones Top-10</div>
-      <div class="kpi-value good-val">16 → 44</div>
-      <div class="kpi-sub">Máximo May 21 (44) · Jun 4: 35 · ajuste <span class="delta delta-neutral">↔</span></div>
+      <div class="kpi-label">Jun 4 → Jun 9</div>
+      <div class="kpi-value good-val">#41.5 → #43.7</div>
+      <div class="kpi-sub">Posición general · ajuste leve entre períodos <span class="delta delta-neutral">↔</span></div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Precio promedio ULIV</div>
       <div class="kpi-value good-val">$1,674 → $598</div>
-      <div class="kpi-sub">Nuevo mínimo histórico en Jun 4 <span class="delta delta-good">▼ −64% desde Apr 9</span></div>
+      <div class="kpi-sub">Mínimo Jun 4 · convergencia histórica con mercado <span class="delta delta-good">▼ −64% desde Abr</span></div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Score ULIV</div>
-      <div class="kpi-value good-val">8.96 → 9.09</div>
-      <div class="kpi-sub">Jun 4: 9.04 · líder 6 períodos <span class="delta delta-good">▲ +0.08 vs mar</span></div>
+      <div class="kpi-value good-val">8.96 → 9.04</div>
+      <div class="kpi-sub">Jun 9: ~9.0 · líder 7 períodos <span class="delta delta-good">▲ sostenido</span></div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">Lumina — rebote sorpresivo</div>
-      <div class="kpi-value bad">#37.7</div>
-      <div class="kpi-sub">Líder 3° período · mejora a #37.7 <span class="delta delta-bad">↗ presión en Condesa y Roma</span></div>
+      <div class="kpi-label">Lumina — rival principal</div>
+      <div class="kpi-value bad">#32.7</div>
+      <div class="kpi-sub">Jun 9: #32.7 — mejor resultado histórico <span class="delta delta-bad">↗ presión creciente</span></div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title">Posición media ULIV por zona — 6 períodos</div>
-    <div class="card-sub">Comparación de posición media por zona de búsqueda en los seis scraping (menor = mejor)</div>
+    <div class="card-title">Posición media ULIV por zona — 7 períodos</div>
+    <div class="card-sub">Comparación de posición media por zona de búsqueda en los siete scraping (menor = mejor)</div>
     <div class="chart-wrap"><canvas id="chartHistRankZone"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Condesa mejora drásticamente a #21.4 en Jun 4 — mejor resultado zonal en el histórico. Roma sube a #33.5. CDMX cae a #66.6 — reversión tras el #18.0 de May 21. Azteca: 0 apariciones, sin dato de posición.</p>
+    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Jun 9 (promedio 5 partidos): Condesa #32.5, Roma Norte #37.1, Polanco #48.6, CDMX #41.7, Azteca #75.5. Jun 4: Condesa fue la mejor zona con #21.4. La barra roja muestra el 7° período (Jun 9).</p>
   </div>
 
   <div class="grid2">
     <div class="card">
       <div class="card-title">Apariciones totales por marca</div>
-      <div class="card-sub">Total de apariciones en top 100 — 6 períodos de medición</div>
+      <div class="card-sub">Total de apariciones en top 100 — 7 períodos de medición</div>
       <div class="chart-wrap"><canvas id="chartHistApp"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Capitalia lidera en volumen por primera vez (305). ULIV (239) baja desde su máximo (271 May21). Lumina crece a 172 — su máximo histórico. Kukun (132) y MR W (102) completan el histórico.</p>
+    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Jun 9 (5 partidos): ULIV 406 — máximo al incluir 5 fechas. Jun 4: Capitalia lideró volumen (305). Lumina 172 en Jun 4. La barra roja muestra Jun 9 con metodología de 5 partidos vs 3 anteriores.</p>
     </div>
     <div class="card">
       <div class="card-title">Posición media general por marca</div>
-      <div class="card-sub">Posición media general — 6 períodos (menor = mejor)</div>
+      <div class="card-sub">Posición media general — 7 períodos (menor = mejor)</div>
       <div class="chart-wrap"><canvas id="chartHistRank"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">ULIV mejora a #41.5 en Jun 4. Lumina mejora a #37.7 — tercer período liderando. Capitalia recupera #50.6 desde #56.5. MR W estable a #51.8. Kukun empeora a #58.7 — su peor registro en el histórico.</p>
+    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Jun 9: ULIV #43.7 (promedio 5 partidos), Lumina #32.7 (mejor histórico). Jun 4: ULIV #41.5, Lumina #37.7. La barra roja es Jun 9 — refleja ranking promedio entre los 5 partidos del Mundial.</p>
     </div>
   </div>
 
   <div class="card">
     <div class="card-title">Tabla Comparativa Completa — ULIV</div>
-    <div class="card-sub">Métricas clave de ULIV en los seis períodos de medición</div>
+    <div class="card-sub">Métricas clave de ULIV en los siete períodos de medición</div>
     <div class="hist-table">
       <table>
         <thead>
@@ -834,6 +691,7 @@
             <th>14/05/2026</th>
             <th>21/05/2026</th>
             <th>04/06/2026</th>
+            <th>09/06/2026</th>
             <th>Tendencia</th>
           </tr>
         </thead>
@@ -846,7 +704,8 @@
             <td>#42.3</td>
             <td>#42.3</td>
             <td class="change-good">#41.5 <span style="font-weight:400;color:#888">(-0.8)</span></td>
-            <td>↗️</td>
+            <td class="change-neutral">#43.7 <span style="font-weight:400;color:#888">(+2.2)</span></td>
+            <td>↔️</td>
           </tr>
           <tr>
             <td>Apariciones totales en top 100</td>
@@ -854,7 +713,9 @@
             <td>186</td>
             <td>243</td>
             <td>228</td>
-            <td class="change-good">271 <span style="font-weight:400;color:#888">(+43, +19%)</span></td>
+            <td>271</td>
+            <td class="change-neutral">239 <span style="font-weight:400;color:#888">(3 fechas)</span></td>
+            <td class="change-good">406 <span style="font-weight:400;color:#888">(5 partidos)</span></td>
             <td>📈</td>
           </tr>
           <tr>
@@ -863,8 +724,10 @@
             <td>16</td>
             <td>39</td>
             <td>36</td>
-            <td class="change-good">44 <span style="font-weight:400;color:#888">(+8, +22%)</span></td>
-            <td>📈</td>
+            <td>44</td>
+            <td class="change-neutral">35 <span style="font-weight:400;color:#888">(-9)</span></td>
+            <td class="change-neutral">— <span style="font-weight:400;color:#888">(5 partidos)</span></td>
+            <td>↔️</td>
           </tr>
           <tr>
             <td>Apariciones en top 20</td>
@@ -872,8 +735,10 @@
             <td>33</td>
             <td>63</td>
             <td>48</td>
-            <td class="change-good">65 <span style="font-weight:400;color:#888">(+17, +35%)</span></td>
-            <td>📈</td>
+            <td>65</td>
+            <td class="change-neutral">67 <span style="font-weight:400;color:#888">(+2)</span></td>
+            <td class="change-neutral">— <span style="font-weight:400;color:#888">(5 partidos)</span></td>
+            <td>↔️</td>
           </tr>
           <tr>
             <td>Mejor propiedad (posición)</td>
@@ -883,6 +748,7 @@
             <td>ULIV Parque Lincoln #17.0</td>
             <td>ULIV Parque Lincoln #19.5</td>
             <td class="change-good">ULIV Parque Lincoln #18.4</td>
+            <td class="change-neutral">ULIV Parque Lincoln — Jun 10</td>
             <td>📈</td>
           </tr>
           <tr>
@@ -892,8 +758,9 @@
             <td>94</td>
             <td>93</td>
             <td>118</td>
-            <td class="change-neutral">113 <span style="font-weight:400;color:#888">(-5)</span></td>
-            <td>↔️</td>
+            <td>113</td>
+            <td class="change-good">179 <span style="font-weight:400;color:#888">(5 partidos)</span></td>
+            <td>📈</td>
           </tr>
           <tr>
             <td>Apariciones zona Condesa</td>
@@ -902,8 +769,9 @@
             <td>54</td>
             <td>55</td>
             <td>56</td>
-            <td class="change-bad">46 <span style="font-weight:400;color:#888">(-10)</span></td>
-            <td>↘️</td>
+            <td>46</td>
+            <td class="change-good">77 <span style="font-weight:400;color:#888">(5 partidos)</span></td>
+            <td>📈</td>
           </tr>
           <tr>
             <td>Apariciones zona Roma</td>
@@ -911,8 +779,10 @@
             <td>47</td>
             <td>51</td>
             <td>56</td>
-            <td class="change-neutral">53 <span style="font-weight:400;color:#888">(−3)</span></td>
-            <td>↘️</td>
+            <td>53</td>
+            <td>46</td>
+            <td class="change-good">89 <span style="font-weight:400;color:#888">(5 partidos)</span></td>
+            <td>📈</td>
           </tr>
           <tr>
             <td>Apariciones zona CDMX</td>
@@ -921,8 +791,9 @@
             <td>38</td>
             <td>20</td>
             <td>40</td>
-            <td class="change-bad">34 <span style="font-weight:400;color:#888">(-6)</span></td>
-            <td>↘️</td>
+            <td>34</td>
+            <td class="change-neutral">38 <span style="font-weight:400;color:#888">(5 partidos)</span></td>
+            <td>↔️</td>
           </tr>
           <tr>
             <td>Apariciones zona Azteca</td>
@@ -931,8 +802,9 @@
             <td>6</td>
             <td>4</td>
             <td>4</td>
-            <td class="change-bad">0 <span style="font-weight:400;color:#888">(-4)</span></td>
-            <td>↘️</td>
+            <td>0</td>
+            <td class="change-good">23 <span style="font-weight:400;color:#888">(5 partidos)</span></td>
+            <td>↗️</td>
           </tr>
           <tr>
             <td>Score promedio</td>
@@ -940,7 +812,9 @@
             <td>8.98</td>
             <td>9.08</td>
             <td>9.10</td>
-            <td class="change-neutral">9.09 <span style="font-weight:400;color:#888">(−0.01)</span></td>
+            <td>9.09</td>
+            <td class="change-neutral">9.04 <span style="font-weight:400;color:#888">(−0.05)</span></td>
+            <td class="change-neutral">~9.0 <span style="font-weight:400;color:#888">(estimado)</span></td>
             <td>↔️</td>
           </tr>
           <tr>
@@ -949,7 +823,9 @@
             <td>$1,734</td>
             <td>$1,446</td>
             <td>$1,116</td>
-            <td class="change-good">$920 <span style="font-weight:400;color:#888">(−$196, −18%)</span></td>
+            <td>$920</td>
+            <td class="change-good">$687 <span style="font-weight:400;color:#888">(−$233, −25%)</span></td>
+            <td class="change-neutral">~$730 <span style="font-weight:400;color:#888">(estimado)</span></td>
             <td>📉</td>
           </tr>
           <tr>
@@ -960,92 +836,50 @@
             <td>2° (detrás de Lumina)</td>
             <td>2° (detrás de Lumina)</td>
             <td class="change-neutral">2° (detrás de Lumina)</td>
+            <td class="change-neutral">2° (detrás de Lumina)</td>
             <td>↔️</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p style="font-size:12px;color:#888;margin-top:8px">Jun 4: ULIV Parque Lincoln (#18.4) mantiene el liderazgo del portafolio. Condesa mejora a #21.4 — mejor zona del período. El precio alcanza nuevo mínimo histórico ($687), con el Mundial comenzando en 6 días (Jun 10).</p>
+    <p style="font-size:12px;color:#888;margin-top:8px">Jun 4: Parque Lincoln (#18.4) · Condesa #21.4 · precio mínimo $598. Jun 9 (5 partidos): posición media #43.7 · ULIV en Azteca 23 apariciones (recuperación) · zona más activa: Polanco con 179 apariciones.</p>
   </div>
 
   <div class="card">
     <div class="card-title">Apariciones ULIV por zona — Comparativa de los 6 períodos</div>
-    <div class="card-sub">Evolución por zona entre los seis scraping disponibles</div>
+    <div class="card-sub">Evolución por zona entre los siete scraping disponibles</div>
     <div class="chart-wrap"><canvas id="chartHistZoneApp"></canvas></div>
-    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Polanco baja de 118 a 113. Condesa cae de 56 a 46. CDMX retrocede de 40 a 34. Roma baja de 53 a 46. Azteca: 0 apariciones. Reducción general de visibilidad por zona.</p>
+    <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Jun 9 (barra roja, 5 partidos): Polanco 179, Condesa 77, Roma 89, CDMX 38, Azteca 23. El mayor volumen refleja 5 fechas scrapeadas vs 3 en períodos anteriores.</p>
   </div>
 
-  <div class="insights">
-    <div class="insight positive">
-      <div class="insight-icon">📈</div>
-      <div>
-        <div class="insight-title">5 períodos de ULIV: precio relativo bajo coincide con mejor posición</div>
-        <div class="insight-text">En el historial longitudinal de ULIV, el patrón es consistente: precio subió ($1,425→$1,734) → posición cayó; precio bajó ($1,734→$920) → posición y apariciones se recuperaron al máximo. Este patrón aplica a ULIV específicamente — no es una regla universal del mercado, donde otros factores (score, reseñas) dominan entre hoteles distintos.</div>
-      </div>
-    </div>
-    <div class="insight warning">
-      <div class="insight-icon">🔴</div>
-      <div>
-        <div class="insight-title">Lumina: 2 períodos liderando con ventaja consistente sobre ULIV</div>
-        <div class="insight-text">Lumina lleva 2 períodos como líder general (#38.0 → #39.0) con ventaja de 3 posiciones sobre ULIV. Su combinación de precio $662, score 9.08 y dominio en Condesa (#15) y Polanco (#16) es el perfil competitivo más completo del mercado. La brecha en zonas premium es el mayor riesgo para el portafolio ULIV de cara al Mundial.</div>
-      </div>
-    </div>
-    <div class="insight positive">
-      <div class="insight-icon">🏠</div>
-      <div>
-        <div class="insight-title">ULIV Parque Lincoln: líder del portafolio por 2° período (32 apps, #19.5)</div>
-        <div class="insight-text">Parque Lincoln es la propiedad más frecuente (32 apariciones) y con mejor posición del portafolio (#19.5), consolidando su liderazgo por segundo período consecutivo. CDMX también emerge con fuerza: 40 apariciones vs 20 en May 14, respaldadas por propiedades con posición #18.0 en promedio zonal.</div>
-      </div>
-    </div>
-    <div class="insight info">
-      <div class="insight-icon">📉</div>
-      <div>
-        <div class="insight-title">MR W rompe su racha: 5° período sin mejorar</div>
-        <div class="insight-text">MR W retrocede de #47.3 a #52.1, rompiendo 4 períodos consecutivos de mejora. La tendencia que lo llevaba al top 3 se interrumpe. Con precio $652 y score 8.87, sigue siendo competitivo, pero la reversión sugiere que su avance anterior estaba parcialmente impulsado por factores estacionales o temporales.</div>
-      </div>
-    </div>
-    <div class="insight warning">
-      <div class="insight-icon">⚡</div>
-      <div>
-        <div class="insight-title">Capitalia: volumen récord (305 apps) pero patrón oscilante en 6 períodos</div>
-        <div class="insight-text">Capitalia mejora de #56.5 a #50.6 y alcanza 305 apariciones — máximo histórico. Sin embargo, en 6 períodos: #49.7→#53.8→#60.8→#51.7→#56.5→#50.6, el patrón oscilante persiste. Alto volumen sin posición de calidad sostenida. Con precio $935 y score 8.82, el perfil es el opuesto a la hipótesis precio-posición de ULIV: más caro, más apariciones, pero peor posición relativa.</div>
-      </div>
-    </div>
-    <div class="insight tip">
-      <div class="insight-icon">🎯</div>
-      <div>
-        <div class="insight-title">El histórico habla claro: no subir precio en jun-jul mantiene el posicionamiento</div>
-        <div class="insight-text">En los 6 períodos, el mensaje es consistente: precio bajo relativo al mercado → mejor posición. Jun4 lleva el precio mediana a $598 vs. mediana del mercado $450 — convergencia de solo $148. ULIV entra al Mundial en su mejor relación precio-posición del histórico. El único riesgo documentado: subir precio ante la demanda del Mundial y revertir 3 meses de avance. Mantener mediana por debajo de $700 en jun-jul es la recomendación más respaldada por datos.</div>
-      </div>
-    </div>
-  </div>
+  <div class="insights" id="histInsights"></div>
 </div>
 
 <!-- ===== CONCLUSIONES ===== -->
 <div class="section" id="recomendaciones">
   <div class="sec-title">Conclusiones y Recomendaciones</div>
-  <div class="sec-sub">Hallazgos clave basados en el scraping del 04/06/2026 y comparativa histórica de 6 períodos</div>
+  <div class="sec-sub">Hallazgos clave basados en el scraping del 09/06/2026 y comparativa histórica de 7 períodos</div>
 
-  <div class="kpi-grid" style="margin-bottom:28px">
+  <div class="kpi-grid" id="recStatusKpis" style="margin-bottom:28px">
     <div class="kpi" style="border-left-color:#2d6a4f">
-      <div class="kpi-label">Estado general del portafolio</div>
-      <div class="kpi-value good-val" style="font-size:22px">Leve mejora</div>
-      <div class="kpi-sub">↗ #41.5 · Condesa #21.4 · precio mínimo $598</div>
+      <div class="kpi-label">Posición ULIV · <span id="recDate">Jun 10</span></div>
+      <div class="kpi-value good-val" id="recUlivRank" style="font-size:22px">#39.9</div>
+      <div class="kpi-sub" id="recUlivSub">fecha seleccionada</div>
     </div>
     <div class="kpi" style="border-left-color:#e9c46a">
       <div class="kpi-label">Riesgo principal</div>
       <div class="kpi-value" style="font-size:18px">Precio</div>
-      <div class="kpi-sub">6 períodos confirman correlación directa precio-posición</div>
+      <div class="kpi-sub">7 períodos confirman correlación directa precio-posición</div>
     </div>
     <div class="kpi" style="border-left-color:#e76f51">
       <div class="kpi-label">Competidor a vigilar</div>
-      <div class="kpi-value" style="font-size:22px">Lumina</div>
-      <div class="kpi-sub">Sigue liderando a #37.7 — presión en Condesa y Roma Norte</div>
+      <div class="kpi-value" id="recTopComp" style="font-size:22px">Lumina</div>
+      <div class="kpi-sub" id="recTopCompSub">Lidera el mercado · fecha seleccionada</div>
     </div>
     <div class="kpi info">
-      <div class="kpi-label">Ventana de oportunidad</div>
-      <div class="kpi-value" style="font-size:18px">6 días</div>
-      <div class="kpi-sub">Jun 10 — primer partido del Mundial en México</div>
+      <div class="kpi-label">Precio ULIV · <span id="recDatePrice">Jun 10</span></div>
+      <div class="kpi-value" id="recUlivPrice" style="font-size:18px">$716</div>
+      <div class="kpi-sub">Mediana · fecha seleccionada</div>
     </div>
   </div>
 
@@ -1168,52 +1002,58 @@
 <!-- ===== PRECIOS ===== -->
 <div class="section" id="precios">
   <div class="sec-title">Análisis de Precios del Mercado</div>
-  <div class="sec-sub">6,000 registros scrapeados · Todos los hoteles que aparecieron en el top 100 · Expedia + Booking · 5 zonas · Junio 4 2026</div>
+  <div class="sec-sub">Análisis de mercado del scraping Jun 4 + evolución histórica de 7 períodos · Expedia + Booking · 5 zonas · Mundial 2026</div>
 
   <div class="kpi-grid">
     <div class="kpi info">
-      <div class="kpi-label">Registros analizados</div>
-      <div class="kpi-value">6,000</div>
-      <div class="kpi-sub">hoteles scrapeados · 100% tienen precio válido</div>
+      <div class="kpi-label">Períodos en evolución histórica</div>
+      <div class="kpi-value">7</div>
+      <div class="kpi-sub">Mar 27 → Jun 9 · 2026</div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">Precio mediano del mercado</div>
-      <div class="kpi-value">$450</div>
-      <div class="kpi-sub">USD · baja de $576 (May 21) · mínimo de los 6 períodos</div>
+      <div class="kpi-label">Precio mediano mercado · Jun 9</div>
+      <div class="kpi-value" id="preciosMktMedian">$417</div>
+      <div class="kpi-sub" id="preciosMktSub">promedio 5 partidos · baja de $450 (Jun 4)</div>
     </div>
     <div class="kpi warn">
-      <div class="kpi-label">Mediana ULIV vs. mercado</div>
-      <div class="kpi-value">+33%</div>
-      <div class="kpi-sub">$598 mediana ULIV · supera al 67% del mercado</div>
+      <div class="kpi-label">Mediana ULIV vs. mercado · <span id="preciosUlivDate">Jun 10</span></div>
+      <div class="kpi-value" id="preciosUlivDiff">+91%</div>
+      <div class="kpi-sub" id="preciosUlivSub">$716 ULIV vs $375 mercado · fecha seleccionada</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Relación precio–ranking</div>
       <div class="kpi-value good-val">Sin efecto claro</div>
-      <div class="kpi-sub">A nivel de mercado — ver historial ULIV para patrón individual</div>
+      <div class="kpi-sub">A nivel de mercado — patrón individual sí aplica a ULIV (ver Histórico)</div>
     </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;border-top:3px solid var(--uliv)">
+    <div class="card-title">Precios del mercado — <span id="preciosDynDate">Jun 10</span></div>
+    <div class="card-sub" id="preciosDynSub">Cuartiles del mercado combinado (Expedia + Booking) · fecha seleccionada</div>
+    <div id="preciosDynBody" style="margin-top:16px"></div>
   </div>
 
   <div class="alert-banner" style="background:#e8f4f8;border-color:#457b9d">
     <div class="alert-banner-icon">🔍</div>
     <div class="alert-banner-text">
       <strong>Análisis de mercado (corte transversal): precio no predice posición entre hoteles</strong>
-      Con 6,000 registros reales, la posición promedio es prácticamente plana entre $200 y $2,500; el único efecto claro aparece en hoteles >$3k (posición media 67.5), que representan menos del 4% del mercado. Los factores que sí se asocian más a mejor posición son el volumen de reseñas y el score. La relación precio–ranking observada a nivel de marcas es un efecto de composición, no una regla directa del algoritmo. Nota: este análisis es transversal del mercado — el historial longitudinal de ULIV en 5 períodos sí muestra un patrón consistente (ver pestaña Histórico).
+      Con 9,919 registros reales, la posición promedio es prácticamente plana entre $200 y $2,500; el único efecto claro aparece en hoteles >$3k (posición media 67.5), que representan menos del 4% del mercado. Los factores que sí se asocian más a mejor posición son el volumen de reseñas y el score. La relación precio–ranking observada a nivel de marcas es un efecto de composición, no una regla directa del algoritmo. Nota: este análisis es transversal del mercado — el historial longitudinal de ULIV en 5 períodos sí muestra un patrón consistente (ver pestaña Histórico).
     </div>
   </div>
 
   <div class="card">
     <div class="card-title">Evolución de Precios a lo Largo del Tiempo</div>
-    <div class="card-sub">6 períodos de scraping · evolución del precio mediano y distribución de segmentos · Mar–Jun 2026</div>
+    <div class="card-sub">7 períodos de scraping · evolución del precio mediano y distribución de segmentos · Mar–Jun 2026</div>
     <div class="grid2" style="margin-top:16px">
       <div>
         <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:#2d3436">Precio mediano: mercado vs. ULIV</div>
         <div class="chart-wrap"><canvas id="chartHistPrices"></canvas></div>
-        <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">El mercado alcanza su mínimo histórico: mediana $450 (Jun 4) vs $576 (May 21). ULIV baja de $871 a $598, reduciendo su prima de 1.5× a 1.3×. Convergencia máxima entre ULIV y mercado en 6 períodos.</p>
+        <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Jun 9 (5 partidos): mercado mediana $417 · ULIV mediana $686. Jun 4 fue el mínimo de precio ULIV ($598). En 7 períodos, ULIV bajó de $1,674 (Abr) a $598 (Jun 4) antes de subir levemente en Jun 9.</p>
       </div>
       <div>
         <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:#2d3436">Distribución por segmento de precio</div>
         <div class="chart-wrap"><canvas id="chartHistRanges"></canvas></div>
-        <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">En Jun 4 el segmento &lt;$500 sube a 56% (vs 43% en May 21) — el mercado anticipa demanda del Mundial. Los segmentos altos ($1k+) representan solo 9% del total. Convergencia de precios hacia el rango más bajo del histórico.</p>
+        <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">Jun 9: &lt;$500 sube a ~60% del mercado (vs 56.4% en Jun 4 y 43% en May 21) — el mercado continúa comprimiendo precios durante el Mundial. Los segmentos altos ($1k+) siguen en ~12% del total.</p>
       </div>
     </div>
   </div>
@@ -1270,10 +1110,10 @@
       <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">El umbral crítico es 8.5 puntos: superarlo equivale a ganar ~10 posiciones en promedio. ULIV ya supera este umbral con un score de 9.08, lo que lo protege en el ranking.</p>
     </div>
     <div class="card">
-      <div class="card-title">Precio Mediano por Zona de Búsqueda</div>
-      <div class="card-sub">Polanco tiene precio mediano 2.7× más alto que CDMX · El análisis de precio debe contextualizarse por zona</div>
+      <div class="card-title">Precio Mediano por Zona · <span id="preciosZoneDate">Jun 10</span></div>
+      <div class="card-sub">Precio P50 del mercado por zona · Expedia vs Booking · fecha seleccionada</div>
       <div class="chart-wrap"><canvas id="chartMktZone"></canvas></div>
-      <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">$800 en Polanco es precio de nivel medio-bajo para esa zona; el mismo precio en CDMX genérico sería el segmento más caro. No hay un precio "caro" en abstracto — siempre depende de la zona.</p>
+      <p id="preciosZoneNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
     </div>
   </div>
 
@@ -1287,7 +1127,7 @@
 
   <div class="card">
     <div class="card-title">¿Qué factores influyen más en el posicionamiento?</div>
-    <div class="card-sub">Análisis sobre 6,000 registros reales · Verde: el factor ayuda a mejorar la posición · Amarillo: impacto neutro · Azul: relación entre métricas independientes del ranking</div>
+    <div class="card-sub">Análisis sobre 9,919 registros reales · Verde: el factor ayuda a mejorar la posición · Amarillo: impacto neutro · Azul: relación entre métricas independientes del ranking</div>
     <div class="chart-wrap" style="max-height:200px"><canvas id="chartMktCorr"></canvas></div>
     <p style="font-size:12px;color:#888;margin-top:10px">Ningún factor por sí solo determina la posición. Las OTAs combinan múltiples señales: reseñas, score, disponibilidad, conversión histórica y relevancia geográfica. El número de reseñas y el score son los únicos factores directamente controlables con impacto medible.</p>
   </div>
@@ -1340,7 +1180,7 @@
 
 </div><!-- end main -->
 
-<div class="footer">ULIV · Análisis de Posicionamiento OTA · 04/06/2026 · Scraping: Expedia + Booking · Chrome + Edge incógnito · 6,000 registros</div>
+<div class="footer">ULIV · Análisis de Posicionamiento OTA · 09/06/2026 · Scraping: Expedia + Booking · Chrome + Edge incógnito · 9,919 registros</div>
 
 <script>
 const COLORS = {
@@ -1353,89 +1193,886 @@ const COLORS = {
 };
 const BRANDS = ['ULIV','Lumina','Capitalia','Kukun','MR W'];
 const LOCS_SHORT = ['CDMX Total','Condesa','Estadio Azteca','Polanco','Roma Norte'];
-const DATES = ['Jun 10','Jun 16','Jun 24'];
+const MATCH_DATES = ['Jun 10','Jun 16','Jun 24','Jun 29','Jul 4'];
 
-// ====== DATA 04/06/2026 ======
-const rankOverall = {ULIV:41.5, Lumina:37.7, Capitalia:50.6, Kukun:58.7, 'MR W':51.8};
-const rankByLoc = {
-  ULIV:     [66.6, 21.4, null, 45.3, 33.5],
-  Lumina:   [56.3, 25.9, null, 47.2, 19.4],
-  Capitalia:[61.3, 41.4, null, 46.8, 33.9],
-  Kukun:    [68.9, 46.4, null, 48.4, 61.8],
-  'MR W':   [57.0, 34.5, null, 65.0, 60.3]
-};
-const avgPrice = {ULIV:687,  Capitalia:935,  Kukun:724,  Lumina:476, 'MR W':417};
-const avgScore = {ULIV:9.04, Lumina:9.00, 'MR W':8.84, Capitalia:8.82, Kukun:8.42};
-const avgReviews = {ULIV:542, Kukun:177, Lumina:114, 'MR W':116, Capitalia:146};
-const trend = {
-  ULIV:     [46.6, 39.1, 38.4],
-  Lumina:   [37.9, 34.2, 40.9],
-  Capitalia:[51.3, 51.7, 48.0],
-  Kukun:    [51.0, 58.4, 66.3],
-  'MR W':   [51.0, 53.1, 51.4]
-};
-const appCount = {
-  ULIV:     [82,  86,  71],
-  Lumina:   [56,  57,  59],
-  Capitalia:[130, 96,  79],
-  Kukun:    [42,  46,  44],
-  'MR W':   [34,  33,  35]
-};
-const uliv_by_loc = {
-  'Ciudad de México': 34,
-  'Condesa': 46,
-  'Estadio Azteca': 0,
-  'Polanco': 113,
-  'Roma Norte': 46
-};
-const uliv_props = [
-  {name:'ULIV Parque Lincoln',                appearances:26, avg_rank:18.4, price_mean:602,  price_median:602},
-  {name:'AR 218 Hotel by ULIV',               appearances:22, avg_rank:31.5, price_mean:644,  price_median:644},
-  {name:'Collections by ULIV Palacio',        appearances:20, avg_rank:53.9, price_mean:1176, price_median:1176},
-  {name:'ULIV Cibeles',                       appearances:20, avg_rank:55.5, price_mean:570,  price_median:570},
-  {name:'ULIV Mexico City',                   appearances:19, avg_rank:39.2, price_mean:465,  price_median:465},
-  {name:'ULIV Edgar Allan Poe',               appearances:18, avg_rank:33.1, price_mean:858,  price_median:858},
-  {name:'ULIV Condesa',                       appearances:16, avg_rank:32.4, price_mean:386,  price_median:386},
-  {name:'ULIV Park Polanco',                  appearances:15, avg_rank:53.4, price_mean:992,  price_median:992},
-  {name:'UTOPIC Campos El&#237;seos by ULIV',  appearances:13, avg_rank:43.6, price_mean:1070, price_median:1070},
-  {name:'ULIV Antara',                        appearances:12, avg_rank:40.3, price_mean:580,  price_median:580},
-  {name:'ULIV Parque M&#233;xico',             appearances:12, avg_rank:34.9, price_mean:510,  price_median:510},
-  {name:'ULIV Roma Norte',                    appearances:12, avg_rank:42.1, price_mean:378,  price_median:378},
-  {name:'ULIV Pulse Roma - Condesa',          appearances:12, avg_rank:59.3, price_mean:521,  price_median:521},
-  {name:'ULIV Polanco',                       appearances:10, avg_rank:61.8, price_mean:566,  price_median:566},
-  {name:'Collections by ULIV Polanco',        appearances:6,  avg_rank:30.2, price_mean:654,  price_median:654},
-  {name:'ULIV Apartments Polanco',            appearances:6,  avg_rank:67.2, price_mean:593,  price_median:593}
-];
+// ====== DATA POR FECHA ======
 
-const aztecaData = [
-  {name:'Segovia Regency',                                          distance:13.5,  ranking:1.0,   brand:'Otros'},
-  {name:'Habitaciones cerca del Estadio',                           distance:0.9,   ranking:2.0,   brand:'Otros'},
-  {name:'Octavia Casa',                                             distance:1.2,   ranking:2.0,   brand:'Otros'},
-  {name:'Habitaciones compartidas tipo Hostal',                     distance:0.5,   ranking:2.7,   brand:'Otros'},
-  {name:'La Casa Azul',                                             distance:1.59,  ranking:3.0,   brand:'Otros'},
-  {name:'Hotel Cuore',                                              distance:0.7,   ranking:3.3,   brand:'Otros'},
-  {name:'Hotel Quinta Tlalpan',                                     distance:0.8,   ranking:5.0,   brand:'Otros'},
-  {name:'One Ciudad de México Periférico Sur',                      distance:2.1,   ranking:5.5,   brand:'Otros'},
-  {name:'Hotel La Luna',                                            distance:0.71,  ranking:5.7,   brand:'Otros'},
-  {name:'Mariachi House',                                           distance:0.7,   ranking:5.8,   brand:'Otros'}
-];
+const byDate = {
+
+
+
+  'Jun 10': {
+
+    rankOverall: {ULIV:39.9, Lumina:34.5, Capitalia:37.6, Kukun:37.6, 'MR W':36.6},
+
+    appTotal:    {ULIV:78, Lumina:47, Capitalia:36, Kukun:66, 'MR W':25},
+
+    avgPrice:    {ULIV:868.1, Lumina:442.7, Capitalia:336.4, Kukun:471.3, 'MR W':357.0},
+
+    avgScore:    {ULIV:8.9, Lumina:9.1, Capitalia:8.8, Kukun:8.4, 'MR W':8.8},
+
+    avgReviews:  {ULIV:628.8, Lumina:131.6, Capitalia:121.2, Kukun:197.3, 'MR W':342.9},
+
+    rankByLoc: {
+
+      'ULIV': [41.0, 26.4, 65.6, 46.1, 23.2],
+
+      'Lumina': [47.7, 13.0, 44.9, 69.5, 14.2],
+
+      'Capitalia': [36.8, 34.5, 48.6, 26.0, 15.5],
+
+      'Kukun': [36.9, 31.2, 49.5, 25.9, 41.8],
+
+      'MR W': [41.2, 39.5, 37.2, null, 29.4],
+
+    },
+
+    ulivByLoc: {'Ciudad de México':12, 'Condesa':13, 'Estadio Azteca':10, 'Polanco':27, 'Roma Norte':16},
+
+    market: {p25:262, median:375.0, p75:653},
+
+    ulivPriceMed: 716.0,
+
+    expedia: {
+
+      rankByBrand: {ULIV:42.0, Lumina:38.6, Capitalia:44.1, Kukun:43.2, 'MR W':41.6},
+
+      appByBrand:  {ULIV:54, Lumina:22, Capitalia:16, Kukun:20, 'MR W':11},
+
+      scoreByBrand:{ULIV:9.3, Lumina:9.1, Capitalia:9.4, Kukun:8.9, 'MR W':9.2},
+
+      market: {p25:310, median:427.0, p75:754},
+
+      ulivPriceMed: 823.5,
+
+      marketZoneP50: [336.0, 475.0, 411.0, 580.0, 392.5],
+
+      ulivZoneApp:   [10, 8, 9, 19, 8],
+
+      ulivZoneRank:  [31.1, 22.0, 63.1, 53.7, 23.8],
+
+    },
+
+    booking: {
+
+      rankByBrand: {ULIV:35.1, Lumina:30.9, Capitalia:32.4, Kukun:35.1, 'MR W':32.6},
+
+      appByBrand:  {ULIV:24, Lumina:25, Capitalia:20, Kukun:46, 'MR W':14},
+
+      scoreByBrand:{ULIV:8.5, Lumina:9.1, Capitalia:8.5, Kukun:8.3, 'MR W':8.7},
+
+      market: {p25:230, median:316.0, p75:548},
+
+      ulivPriceMed: 644.0,
+
+      marketZoneP50: [273.0, 383.0, 304.0, 700.0, 299.0],
+
+      ulivZoneApp:   [2, 5, 1, 8, 8],
+
+      ulivZoneRank:  [90.5, 33.4, 88.0, 28.1, 22.8],
+
+    },
+
+    uliv_props: [
+
+      {name:'AR 218 Hotel by ULIV', appearances:13, avg_rank:24.4, price_mean:937.0, price_median:937.0},
+
+      {name:'ULIV Mexico City', appearances:9, avg_rank:31.0, price_mean:385.0, price_median:385.0},
+
+      {name:'ULIV Cibeles', appearances:8, avg_rank:23.0, price_mean:472.0, price_median:472.0},
+
+      {name:'ULIV Condesa', appearances:8, avg_rank:41.9, price_mean:379.0, price_median:379.0},
+
+      {name:'ULIV Pulse Roma - Condesa', appearances:7, avg_rank:35.9, price_mean:366.0, price_median:366.0},
+
+      {name:'UTOPIC Campos Elíseos by ULIV', appearances:6, avg_rank:56.7, price_mean:2651.0, price_median:2651.0},
+
+      {name:'ULIV Roma Norte', appearances:5, avg_rank:68.4, price_mean:777.0, price_median:777.0},
+
+      {name:'ULIV Antara', appearances:4, avg_rank:28.8, price_mean:785.0, price_median:785.0},
+
+      {name:'Collections by ULIV Palacio', appearances:4, avg_rank:55.8, price_mean:1515.0, price_median:1515.0},
+
+      {name:'ULIV Parque México', appearances:4, avg_rank:51.5, price_mean:696.0, price_median:696.0},
+
+      {name:'ULIV Apartments Polanco', appearances:2, avg_rank:30.0, price_mean:591.0, price_median:591.0},
+
+      {name:'ULIV Edgar Allan Poe', appearances:2, avg_rank:43.0, price_mean:909.0, price_median:909.0},
+
+      {name:'ULIV Parque Lincoln', appearances:2, avg_rank:74.5, price_mean:1973.0, price_median:1973.0},
+
+      {name:'Collections by ULIV Polanco', appearances:2, avg_rank:77.5, price_mean:1435.0, price_median:1435.0},
+
+      {name:'ULIV Polanco', appearances:2, avg_rank:33.5, price_mean:1283.0, price_median:1283.0},
+
+    ],
+
+    aztecaData: [
+
+      {name:'City Express Junior by Marriott Toluca Aeropuerto', ranking:1.0, brand:'Otros'},
+
+      {name:'Hotel Benidorm', ranking:1.0, brand:'Otros'},
+
+      {name:'Stanza Hotel', ranking:1.0, brand:'Otros'},
+
+      {name:'W Mexico City', ranking:2.0, brand:'Otros'},
+
+      {name:'Suites Del Ángel', ranking:2.0, brand:'Otros'},
+
+      {name:'Hotel Real Azteca', ranking:3.0, brand:'Otros'},
+
+      {name:'Apartment 60 meters from the CDMX FIFA Stadium', ranking:3.5, brand:'Otros'},
+
+      {name:'Hotel Real del Sur', ranking:4.5, brand:'Otros'},
+
+      {name:'Fiesta Inn Periferico Sur', ranking:5.0, brand:'Otros'},
+
+      {name:'Hotel Cuore', ranking:5.0, brand:'Otros'},
+
+    ],
+
+  },  // end Jun 10
+
+
+
+  'Jun 16': {
+
+    rankOverall: {ULIV:38.9, Lumina:24.5, Capitalia:60.4, Kukun:50.6, 'MR W':45.5},
+
+    appTotal:    {ULIV:87, Lumina:31, Capitalia:158, Kukun:54, 'MR W':33},
+
+    avgPrice:    {ULIV:706.9, Lumina:449.5, Capitalia:582.4, Kukun:543.6, 'MR W':337.5},
+
+    avgScore:    {ULIV:9.0, Lumina:9.2, Capitalia:8.7, Kukun:8.5, 'MR W':8.8},
+
+    avgReviews:  {ULIV:642.2, Lumina:176.2, Capitalia:143.0, Kukun:213.6, 'MR W':304.6},
+
+    rankByLoc: {
+
+      'ULIV': [31.8, 21.4, 89.8, 44.5, 35.1],
+
+      'Lumina': [34.0, null, 41.5, 14.8, 12.0],
+
+      'Capitalia': [66.2, 56.0, 67.5, 58.1, 21.5],
+
+      'Kukun': [42.0, 41.8, 70.2, 43.6, 51.0],
+
+      'MR W': [54.3, 32.8, 51.2, null, 50.4],
+
+    },
+
+    ulivByLoc: {'Ciudad de México':6, 'Condesa':18, 'Estadio Azteca':4, 'Polanco':40, 'Roma Norte':19},
+
+    market: {p25:284, median:434.0, p75:724},
+
+    ulivPriceMed: 692.0,
+
+    expedia: {
+
+      rankByBrand: {ULIV:39.2, Lumina:18.8, Capitalia:59.7, Kukun:58.7, 'MR W':46.6},
+
+      appByBrand:  {ULIV:60, Lumina:12, Capitalia:40, Kukun:19, 'MR W':12},
+
+      scoreByBrand:{ULIV:9.3, Lumina:9.2, Capitalia:9.0, Kukun:8.9, 'MR W':9.2},
+
+      market: {p25:328, median:501.0, p75:826},
+
+      ulivPriceMed: 700.5,
+
+      marketZoneP50: [358.5, 569.0, 411.0, 664.5, 524.5],
+
+      ulivZoneApp:   [6, 12, 4, 26, 12],
+
+      ulivZoneRank:  [31.8, 12.9, 89.8, 48.9, 31.2],
+
+    },
+
+    booking: {
+
+      rankByBrand: {ULIV:38.1, Lumina:28.0, Capitalia:60.6, Kukun:46.2, 'MR W':44.9},
+
+      appByBrand:  {ULIV:27, Lumina:19, Capitalia:118, Kukun:35, 'MR W':21},
+
+      scoreByBrand:{ULIV:8.6, Lumina:9.2, Capitalia:8.7, Kukun:8.3, 'MR W':8.7},
+
+      market: {p25:254, median:396.0, p75:634},
+
+      ulivPriceMed: 692.0,
+
+      marketZoneP50: [283.0, 397.0, 410.0, 653.0, 336.0],
+
+      ulivZoneApp:   [0, 6, 0, 14, 7],
+
+      ulivZoneRank:  [null, 38.3, null, 36.3, 41.7],
+
+    },
+
+    uliv_props: [
+
+      {name:'UTOPIC Campos Elíseos by ULIV', appearances:12, avg_rank:30.3, price_mean:860.0, price_median:860.0},
+
+      {name:'AR 218 Hotel by ULIV', appearances:12, avg_rank:43.2, price_mean:693.0, price_median:693.0},
+
+      {name:'ULIV Parque Lincoln', appearances:8, avg_rank:10.4, price_mean:858.0, price_median:858.0},
+
+      {name:'Collections by ULIV Polanco', appearances:6, avg_rank:9.2, price_mean:620.0, price_median:620.0},
+
+      {name:'ULIV Cibeles', appearances:6, avg_rank:58.7, price_mean:663.0, price_median:663.0},
+
+      {name:'ULIV Mexico City', appearances:6, avg_rank:21.8, price_mean:495.0, price_median:495.0},
+
+      {name:'ULIV Polanco', appearances:4, avg_rank:36.5, price_mean:605.0, price_median:605.0},
+
+      {name:'ULIV Antara', appearances:4, avg_rank:55.0, price_mean:775.0, price_median:775.0},
+
+      {name:'ULIV Edgar Allan Poe', appearances:4, avg_rank:60.2, price_mean:826.0, price_median:826.0},
+
+      {name:'ULIV Park Polanco', appearances:4, avg_rank:64.0, price_mean:958.5, price_median:958.5},
+
+      {name:'Collections by ULIV Palacio', appearances:4, avg_rank:64.0, price_mean:1063.5, price_median:1063.5},
+
+      {name:'ULIV Condesa', appearances:4, avg_rank:11.5, price_mean:378.5, price_median:378.5},
+
+      {name:'ULIV Parque México', appearances:4, avg_rank:48.5, price_mean:585.5, price_median:585.5},
+
+      {name:'ULIV Roma Norte', appearances:4, avg_rank:49.8, price_mean:475.5, price_median:475.5},
+
+      {name:'ULIV Pulse Roma - Condesa', appearances:3, avg_rank:65.0, price_mean:490.0, price_median:490.0},
+
+      {name:'ULIV Apartments Polanco', appearances:2, avg_rank:63.0, price_mean:666.0, price_median:666.0},
+
+    ],
+
+    aztecaData: [
+
+      {name:'Hotel Benidorm', ranking:1.0, brand:'Otros'},
+
+      {name:'Segovia Regency', ranking:1.0, brand:'Otros'},
+
+      {name:'NIU Reforma', ranking:2.0, brand:'Otros'},
+
+      {name:'La Casa Azul', ranking:4.0, brand:'Otros'},
+
+      {name:'Hotel Quinta Tlalpan', ranking:4.0, brand:'Otros'},
+
+      {name:'One Ciudad de México Periférico Sur', ranking:5.0, brand:'Otros'},
+
+      {name:'Stylish Loft special for a World Cup Stay', ranking:5.0, brand:'Otros'},
+
+      {name:'Hotel Cuore', ranking:7.0, brand:'Otros'},
+
+      {name:'Apartment 60 meters from the CDMX FIFA Stadium', ranking:7.0, brand:'Otros'},
+
+      {name:'HOTEL HUIPULCO', ranking:7.0, brand:'Otros'},
+
+    ],
+
+  },  // end Jun 16
+
+
+
+  'Jun 24': {
+
+    rankOverall: {ULIV:38.3, Lumina:34.0, Capitalia:63.2, Kukun:54.4, 'MR W':48.5},
+
+    appTotal:    {ULIV:90, Lumina:43, Capitalia:105, Kukun:45, 'MR W':37},
+
+    avgPrice:    {ULIV:573.9, Lumina:431.1, Capitalia:636.7, Kukun:530.2, 'MR W':342.4},
+
+    avgScore:    {ULIV:9.0, Lumina:9.1, Capitalia:8.7, Kukun:8.4, 'MR W':8.8},
+
+    avgReviews:  {ULIV:623.8, Lumina:159.6, Capitalia:145.8, Kukun:211.2, 'MR W':275.1},
+
+    rankByLoc: {
+
+      'ULIV': [35.5, 22.2, 92.7, 41.9, 38.0],
+
+      'Lumina': [54.2, 9.5, 38.6, 32.8, 18.0],
+
+      'Capitalia': [71.3, 42.1, 72.9, 65.1, 25.5],
+
+      'Kukun': [42.8, 48.5, 78.8, 39.5, 57.1],
+
+      'MR W': [54.3, 39.9, 58.5, null, 52.4],
+
+    },
+
+    ulivByLoc: {'Ciudad de México':10, 'Condesa':17, 'Estadio Azteca':3, 'Polanco':40, 'Roma Norte':20},
+
+    market: {p25:260, median:402.0, p75:626},
+
+    ulivPriceMed: 585.5,
+
+    expedia: {
+
+      rankByBrand: {ULIV:38.3, Lumina:36.7, Capitalia:59.8, Kukun:61.9, 'MR W':55.7},
+
+      appByBrand:  {ULIV:63, Lumina:18, Capitalia:22, Kukun:15, 'MR W':14},
+
+      scoreByBrand:{ULIV:9.3, Lumina:9.2, Capitalia:8.9, Kukun:8.9, 'MR W':9.1},
+
+      market: {p25:314, median:463.0, p75:720},
+
+      ulivPriceMed: 593.0,
+
+      marketZoneP50: [376.0, 474.0, 403.5, 591.0, 508.5],
+
+      ulivZoneApp:   [10, 12, 3, 26, 12],
+
+      ulivZoneRank:  [35.5, 19.3, 92.7, 42.7, 36.6],
+
+    },
+
+    booking: {
+
+      rankByBrand: {ULIV:38.3, Lumina:32.2, Capitalia:64.2, Kukun:50.6, 'MR W':44.1},
+
+      appByBrand:  {ULIV:27, Lumina:25, Capitalia:83, Kukun:30, 'MR W':23},
+
+      scoreByBrand:{ULIV:8.6, Lumina:9.1, Capitalia:8.6, Kukun:8.3, 'MR W':8.7},
+
+      market: {p25:230, median:340.0, p75:582},
+
+      ulivPriceMed: 488.0,
+
+      marketZoneP50: [244.0, 391.0, 333.0, 604.0, 304.0],
+
+      ulivZoneApp:   [0, 5, 0, 14, 8],
+
+      ulivZoneRank:  [null, 29.2, null, 40.5, 40.2],
+
+    },
+
+    uliv_props: [
+
+      {name:'AR 218 Hotel by ULIV', appearances:12, avg_rank:37.8, price_mean:604.0, price_median:604.0},
+
+      {name:'UTOPIC Campos Elíseos by ULIV', appearances:10, avg_rank:36.0, price_mean:860.0, price_median:860.0},
+
+      {name:'ULIV Parque Lincoln', appearances:8, avg_rank:8.4, price_mean:593.0, price_median:593.0},
+
+      {name:'ULIV Antara', appearances:7, avg_rank:51.3, price_mean:727.0, price_median:727.0},
+
+      {name:'Collections by ULIV Polanco', appearances:6, avg_rank:13.3, price_mean:542.0, price_median:542.0},
+
+      {name:'ULIV Cibeles', appearances:6, avg_rank:54.5, price_mean:536.0, price_median:536.0},
+
+      {name:'ULIV Mexico City', appearances:6, avg_rank:15.3, price_mean:401.0, price_median:401.0},
+
+      {name:'ULIV Pulse Roma - Condesa', appearances:6, avg_rank:64.2, price_mean:372.0, price_median:372.0},
+
+      {name:'ULIV Edgar Allan Poe', appearances:4, avg_rank:34.8, price_mean:529.5, price_median:529.5},
+
+      {name:'ULIV Park Polanco', appearances:4, avg_rank:60.2, price_mean:730.5, price_median:730.5},
+
+      {name:'ULIV Apartments Polanco', appearances:4, avg_rank:50.8, price_mean:591.0, price_median:591.0},
+
+      {name:'ULIV Polanco', appearances:4, avg_rank:59.2, price_mean:629.0, price_median:629.0},
+
+      {name:'ULIV Condesa', appearances:4, avg_rank:14.5, price_mean:337.5, price_median:337.5},
+
+      {name:'ULIV Roma Norte', appearances:4, avg_rank:51.8, price_mean:419.0, price_median:419.0},
+
+      {name:'ULIV Parque México', appearances:3, avg_rank:43.3, price_mean:558.0, price_median:558.0},
+
+      {name:'Collections by ULIV Palacio', appearances:2, avg_rank:55.5, price_mean:807.0, price_median:807.0},
+
+    ],
+
+    aztecaData: [
+
+      {name:'Hotel Benidorm', ranking:1.0, brand:'Otros'},
+
+      {name:'Segovia Regency', ranking:1.0, brand:'Otros'},
+
+      {name:'Urban Reforma Mexico City by Lumina', ranking:2.0, brand:'Lumina'},
+
+      {name:'La Casa Azul', ranking:3.5, brand:'Otros'},
+
+      {name:'Hotel Quinta Tlalpan', ranking:3.5, brand:'Otros'},
+
+      {name:'Habitaciones compartidas tipo Hostal a 5 minutos del Estadio Ciudad de México Estadio Banorte - Azteca', ranking:4.5, brand:'Otros'},
+
+      {name:'Hotel Real Azteca', ranking:6.0, brand:'Otros'},
+
+      {name:'Apartment 60 meters from the CDMX FIFA Stadium', ranking:6.0, brand:'Otros'},
+
+      {name:'One Ciudad de México Periférico Sur', ranking:6.5, brand:'Otros'},
+
+      {name:'Hotel Cuore', ranking:6.5, brand:'Otros'},
+
+    ],
+
+  },  // end Jun 24
+
+
+
+  'Jun 29': {
+
+    rankOverall: {ULIV:49.0, Lumina:38.6, Capitalia:60.2, Kukun:58.5, 'MR W':65.5},
+
+    appTotal:    {ULIV:87, Lumina:54, Capitalia:64, Kukun:39, 'MR W':43},
+
+    avgPrice:    {ULIV:763.8, Lumina:423.0, Capitalia:971.3, Kukun:726.9, 'MR W':454.4},
+
+    avgScore:    {ULIV:9.0, Lumina:9.0, Capitalia:8.7, Kukun:8.4, 'MR W':8.7},
+
+    avgReviews:  {ULIV:606.1, Lumina:156.0, Capitalia:147.7, Kukun:199.5, 'MR W':178.3},
+
+    rankByLoc: {
+
+      'ULIV': [41.4, 42.4, 54.0, 54.3, 44.9],
+
+      'Lumina': [53.1, 24.4, 55.9, 53.8, 13.5],
+
+      'Capitalia': [61.0, 42.3, 80.4, 58.9, 40.5],
+
+      'Kukun': [37.4, 50.5, 83.7, 45.6, 68.2],
+
+      'MR W': [79.0, 51.2, 79.0, 73.0, 73.3],
+
+    },
+
+    ulivByLoc: {'Ciudad de México':7, 'Condesa':16, 'Estadio Azteca':6, 'Polanco':39, 'Roma Norte':19},
+
+    market: {p25:260, median:424.0, p75:750},
+
+    ulivPriceMed: 728.0,
+
+    expedia: {
+
+      rankByBrand: {ULIV:44.5, Lumina:39.3, Capitalia:68.1, Kukun:67.4, 'MR W':67.4},
+
+      appByBrand:  {ULIV:60, Lumina:21, Capitalia:15, Kukun:16, 'MR W':18},
+
+      scoreByBrand:{ULIV:9.3, Lumina:9.1, Capitalia:9.1, Kukun:8.9, 'MR W':9.1},
+
+      market: {p25:314, median:493.5, p75:829},
+
+      ulivPriceMed: 797.0,
+
+      marketZoneP50: [341.0, 477.0, 415.5, 670.0, 606.0],
+
+      ulivZoneApp:   [6, 12, 6, 25, 11],
+
+      ulivZoneRank:  [35.3, 34.8, 54.0, 53.0, 35.8],
+
+    },
+
+    booking: {
+
+      rankByBrand: {ULIV:58.9, Lumina:38.2, Capitalia:57.8, Kukun:52.3, 'MR W':64.1},
+
+      appByBrand:  {ULIV:27, Lumina:33, Capitalia:49, Kukun:23, 'MR W':25},
+
+      scoreByBrand:{ULIV:8.6, Lumina:9.0, Capitalia:8.6, Kukun:8.3, 'MR W':8.5},
+
+      market: {p25:224, median:378.0, p75:650},
+
+      ulivPriceMed: 624.0,
+
+      marketZoneP50: [230.0, 412.0, 385.0, 699.0, 352.0],
+
+      ulivZoneApp:   [1, 4, 0, 14, 8],
+
+      ulivZoneRank:  [78.0, 65.2, null, 56.4, 57.5],
+
+    },
+
+    uliv_props: [
+
+      {name:'AR 218 Hotel by ULIV', appearances:10, avg_rank:43.9, price_mean:797.0, price_median:797.0},
+
+      {name:'UTOPIC Campos Elíseos by ULIV', appearances:9, avg_rank:54.6, price_mean:1406.0, price_median:1406.0},
+
+      {name:'ULIV Parque Lincoln', appearances:9, avg_rank:16.0, price_mean:820.0, price_median:820.0},
+
+      {name:'ULIV Antara', appearances:8, avg_rank:55.5, price_mean:794.5, price_median:794.5},
+
+      {name:'Collections by ULIV Polanco', appearances:7, avg_rank:18.4, price_mean:691.0, price_median:691.0},
+
+      {name:'ULIV Cibeles', appearances:7, avg_rank:67.6, price_mean:654.0, price_median:654.0},
+
+      {name:'ULIV Apartments Polanco', appearances:5, avg_rank:52.4, price_mean:630.0, price_median:630.0},
+
+      {name:'ULIV Edgar Allan Poe', appearances:4, avg_rank:68.5, price_mean:798.5, price_median:798.5},
+
+      {name:'ULIV Park Polanco', appearances:4, avg_rank:68.5, price_mean:836.0, price_median:836.0},
+
+      {name:'Collections by ULIV Palacio', appearances:4, avg_rank:63.0, price_mean:945.5, price_median:945.5},
+
+      {name:'ULIV Mexico City', appearances:4, avg_rank:30.0, price_mean:491.5, price_median:491.5},
+
+      {name:'ULIV Roma Norte', appearances:4, avg_rank:59.5, price_mean:426.0, price_median:426.0},
+
+      {name:'ULIV Pulse Roma - Condesa', appearances:4, avg_rank:73.5, price_mean:478.0, price_median:478.0},
+
+      {name:'ULIV Condesa', appearances:3, avg_rank:34.0, price_mean:520.0, price_median:520.0},
+
+      {name:'ULIV Parque México', appearances:3, avg_rank:69.0, price_mean:908.0, price_median:908.0},
+
+      {name:'ULIV Polanco', appearances:2, avg_rank:59.5, price_mean:727.0, price_median:727.0},
+
+    ],
+
+    aztecaData: [
+
+      {name:'Camino Real Polanco Mexico', ranking:1.0, brand:'Otros'},
+
+      {name:'Hotel Benidorm', ranking:1.0, brand:'Otros'},
+
+      {name:'Segovia Regency', ranking:1.0, brand:'Otros'},
+
+      {name:'Hotel Quinta Tlalpan', ranking:3.5, brand:'Otros'},
+
+      {name:'La Casa Azul', ranking:4.0, brand:'Otros'},
+
+      {name:'Habitaciones compartidas tipo Hostal a 5 minutos del Estadio Ciudad de México Estadio Banorte - Azteca', ranking:5.0, brand:'Otros'},
+
+      {name:'Holiday Inn Hotel & Suites Medica Sur by IHG', ranking:5.3, brand:'Otros'},
+
+      {name:'One Ciudad de México Periférico Sur', ranking:6.0, brand:'Otros'},
+
+      {name:'Hotel Real Azteca', ranking:6.5, brand:'Otros'},
+
+      {name:'Hotel Cuore', ranking:6.5, brand:'Otros'},
+
+    ],
+
+  },  // end Jun 29
+
+
+
+  'Jul 4': {
+
+    rankOverall: {ULIV:52.4, Lumina:31.8, Capitalia:57.1, Kukun:60.0, 'MR W':68.0},
+
+    appTotal:    {ULIV:64, Lumina:40, Capitalia:62, Kukun:46, 'MR W':34},
+
+    avgPrice:    {ULIV:761.3, Lumina:436.6, Capitalia:1076.8, Kukun:742.3, 'MR W':677.3},
+
+    avgScore:    {ULIV:8.9, Lumina:9.0, Capitalia:8.7, Kukun:8.4, 'MR W':8.7},
+
+    avgReviews:  {ULIV:500.9, Lumina:155.6, Capitalia:142.5, Kukun:195.0, 'MR W':166.4},
+
+    rankByLoc: {
+
+      'ULIV': [59.0, 50.3, null, 56.1, 44.5],
+
+      'Lumina': [47.8, 17.9, 42.0, 39.2, 12.0],
+
+      'Capitalia': [55.0, 40.4, 80.1, 53.2, 34.0],
+
+      'Kukun': [49.5, 60.5, 80.3, 48.0, 63.1],
+
+      'MR W': [null, 60.3, 92.0, 61.0, 70.2],
+
+    },
+
+    ulivByLoc: {'Ciudad de México':3, 'Condesa':13, 'Estadio Azteca':0, 'Polanco':33, 'Roma Norte':15},
+
+    market: {p25:279, median:449.5, p75:748},
+
+    ulivPriceMed: 706.0,
+
+    expedia: {
+
+      rankByBrand: {ULIV:52.4, Lumina:34.4, Capitalia:65.2, Kukun:69.9, 'MR W':72.1},
+
+      appByBrand:  {ULIV:37, Lumina:18, Capitalia:10, Kukun:19, 'MR W':14},
+
+      scoreByBrand:{ULIV:9.2, Lumina:8.9, Capitalia:8.9, Kukun:8.8, 'MR W':9.2},
+
+      market: {p25:313, median:484.0, p75:776},
+
+      ulivPriceMed: 776.0,
+
+      marketZoneP50: [294.0, 515.0, 403.0, 628.0, 591.5],
+
+      ulivZoneApp:   [3, 8, 0, 19, 7],
+
+      ulivZoneRank:  [59.0, 42.0, null, 59.7, 41.6],
+
+    },
+
+    booking: {
+
+      rankByBrand: {ULIV:52.3, Lumina:29.6, Capitalia:55.5, Kukun:53.1, 'MR W':65.1},
+
+      appByBrand:  {ULIV:27, Lumina:22, Capitalia:52, Kukun:27, 'MR W':20},
+
+      scoreByBrand:{ULIV:8.6, Lumina:9.0, Capitalia:8.6, Kukun:8.2, 'MR W':8.6},
+
+      market: {p25:238, median:420.0, p75:700},
+
+      ulivPriceMed: 612.0,
+
+      marketZoneP50: [228.0, 466.0, 437.0, 694.0, 394.0],
+
+      ulivZoneApp:   [0, 5, 0, 14, 8],
+
+      ulivZoneRank:  [null, 63.6, null, 51.3, 47.1],
+
+    },
+
+    uliv_props: [
+
+      {name:'UTOPIC Campos Elíseos by ULIV', appearances:10, avg_rank:62.1, price_mean:1316.0, price_median:1316.0},
+
+      {name:'ULIV Apartments Polanco', appearances:5, avg_rank:53.0, price_mean:632.0, price_median:632.0},
+
+      {name:'ULIV Parque Lincoln', appearances:4, avg_rank:27.2, price_mean:724.0, price_median:724.0},
+
+      {name:'ULIV Antara', appearances:4, avg_rank:67.2, price_mean:694.0, price_median:694.0},
+
+      {name:'ULIV Park Polanco', appearances:4, avg_rank:73.0, price_mean:840.0, price_median:840.0},
+
+      {name:'ULIV Edgar Allan Poe', appearances:4, avg_rank:74.5, price_mean:781.5, price_median:781.5},
+
+      {name:'Collections by ULIV Palacio', appearances:4, avg_rank:62.0, price_mean:886.0, price_median:886.0},
+
+      {name:'ULIV Parque México', appearances:4, avg_rank:55.2, price_mean:639.0, price_median:639.0},
+
+      {name:'AR 218 Hotel by ULIV', appearances:4, avg_rank:50.2, price_mean:811.0, price_median:811.0},
+
+      {name:'ULIV Mexico City', appearances:4, avg_rank:28.8, price_mean:533.0, price_median:533.0},
+
+      {name:'ULIV Cibeles', appearances:4, avg_rank:45.2, price_mean:598.0, price_median:598.0},
+
+      {name:'ULIV Roma Norte', appearances:4, avg_rank:50.2, price_mean:492.0, price_median:492.0},
+
+      {name:'ULIV Condesa', appearances:3, avg_rank:31.7, price_mean:528.0, price_median:528.0},
+
+      {name:'Collections by ULIV Polanco', appearances:2, avg_rank:21.0, price_mean:638.0, price_median:638.0},
+
+      {name:'ULIV Polanco', appearances:2, avg_rank:55.5, price_mean:714.0, price_median:714.0},
+
+      {name:'ULIV Pulse Roma - Condesa', appearances:2, avg_rank:41.0, price_mean:430.0, price_median:430.0},
+
+    ],
+
+    aztecaData: [
+
+      {name:'Hotel Benidorm', ranking:1.0, brand:'Otros'},
+
+      {name:'Stanza Hotel', ranking:1.0, brand:'Otros'},
+
+      {name:'The St. Regis Mexico City', ranking:2.0, brand:'Otros'},
+
+      {name:'Urban Reforma Mexico City by Lumina', ranking:2.5, brand:'Lumina'},
+
+      {name:'La Casa Azul', ranking:3.0, brand:'Otros'},
+
+      {name:'One Ciudad de México Periférico Sur', ranking:4.0, brand:'Otros'},
+
+      {name:'The Ritz-Carlton, Mexico City', ranking:4.0, brand:'Otros'},
+
+      {name:'Hotel Real Azteca', ranking:5.0, brand:'Otros'},
+
+      {name:'Stylish Loft special for a World Cup Stay', ranking:5.0, brand:'Otros'},
+
+      {name:'Habitaciones compartidas tipo Hostal a 5 minutos del Estadio Ciudad de México Estadio Banorte - Azteca', ranking:5.5, brand:'Otros'},
+
+    ],
+
+  },  // end Jul 4
+
+};  // end byDate
+
+
+
+// ====== TREND ENTRE FECHAS ======
+
+const trendByMatch = {
+
+  'ULIV': [39.9, 38.9, 38.3, 49.0, 52.4],
+
+  'Lumina': [34.5, 24.5, 34.0, 38.6, 31.8],
+
+  'Capitalia': [37.6, 60.4, 63.2, 60.2, 57.1],
+
+  'Kukun': [37.6, 50.6, 54.4, 58.5, 60.0],
+
+  'MR W': [36.6, 45.5, 48.5, 65.5, 68.0],
+
+};
+
+
+
+const appByMatch = {
+
+  'ULIV': [78, 87, 90, 87, 64],
+
+  'Lumina': [47, 31, 43, 54, 40],
+
+  'Capitalia': [36, 158, 105, 64, 62],
+
+  'Kukun': [66, 54, 45, 39, 46],
+
+  'MR W': [25, 33, 37, 43, 34],
+
+};
+
+// ====== GENERAL: aggregate across all match dates ======
+function computeGeneral() {
+  const dates = MATCH_DATES;
+  const avgArr = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length*10)/10 : 0;
+  const avgBrand = key => {
+    const r = {};
+    BRANDS.forEach(b => {
+      const vals = dates.map(d => byDate[d][key]?.[b]||0).filter(v=>v>0);
+      r[b] = vals.length ? Math.round(vals.reduce((a,x)=>a+x,0)/vals.length*10)/10 : 0;
+    });
+    return r;
+  };
+  const avgBrandInt = key => {
+    const r = {};
+    BRANDS.forEach(b => {
+      const vals = dates.map(d => byDate[d][key]?.[b]||0).filter(v=>v>0);
+      r[b] = vals.length ? Math.round(vals.reduce((a,x)=>a+x,0)/vals.length) : 0;
+    });
+    return r;
+  };
+  const avgRankByLoc = () => {
+    const r = {};
+    BRANDS.forEach(b => {
+      r[b] = LOCS_SHORT.map((_,i) => {
+        const vals = dates.map(d => (byDate[d].rankByLoc?.[b]||[])[i]||0).filter(v=>v>0);
+        return vals.length ? Math.round(vals.reduce((a,x)=>a+x,0)/vals.length*10)/10 : null;
+      });
+    });
+    return r;
+  };
+  const avgUlivByLoc = () => {
+    const keys = Object.keys(byDate[dates[0]].ulivByLoc || {});
+    const r = {};
+    keys.forEach(k => {
+      const vals = dates.map(d => (byDate[d].ulivByLoc||{})[k]||0).filter(v=>v>0);
+      r[k] = vals.length ? Math.round(vals.reduce((a,x)=>a+x,0)/vals.length*10)/10 : 0;
+    });
+    return r;
+  };
+  const avgMktObj = key => {
+    const r = {};
+    ['p25','median','p75','mean'].forEach(k => {
+      const vals = dates.map(d => byDate[d][key]?.[k]||0).filter(v=>v>0);
+      r[k] = vals.length ? Math.round(vals.reduce((a,x)=>a+x,0)/vals.length) : 0;
+    });
+    return r;
+  };
+  const avgOta = key => {
+    const r = { market:{}, ulivZoneApp:[], ulivZoneRank:[], marketZoneP50:[], rankByBrand:{}, appByBrand:{}, scoreByBrand:{} };
+    ['p25','median','p75'].forEach(k => {
+      const vals = dates.map(d => byDate[d][key]?.market?.[k]||0).filter(v=>v>0);
+      r.market[k] = vals.length ? Math.round(vals.reduce((a,x)=>a+x,0)/vals.length) : 0;
+    });
+    const uvs = dates.map(d => byDate[d][key]?.ulivPriceMed||0).filter(v=>v>0);
+    r.ulivPriceMed = uvs.length ? Math.round(uvs.reduce((a,x)=>a+x,0)/uvs.length) : 0;
+    BRANDS.forEach(b => {
+      const rb = dates.map(d => byDate[d][key]?.rankByBrand?.[b]||0).filter(v=>v>0);
+      r.rankByBrand[b] = rb.length ? Math.round(rb.reduce((a,x)=>a+x,0)/rb.length*10)/10 : 0;
+      const ab = dates.map(d => byDate[d][key]?.appByBrand?.[b]||0).filter(v=>v>0);
+      r.appByBrand[b] = ab.length ? Math.round(ab.reduce((a,x)=>a+x,0)/ab.length) : 0;
+      const sb = dates.map(d => byDate[d][key]?.scoreByBrand?.[b]||0).filter(v=>v>0);
+      r.scoreByBrand[b] = sb.length ? Math.round(sb.reduce((a,x)=>a+x,0)/sb.length*10)/10 : 0;
+    });
+    LOCS_SHORT.forEach((_,i) => {
+      const za = dates.map(d => (byDate[d][key]?.ulivZoneApp||[])[i]||0).filter(v=>v>0);
+      r.ulivZoneApp[i] = za.length ? Math.round(za.reduce((a,x)=>a+x,0)/za.length) : null;
+      const zr = dates.map(d => (byDate[d][key]?.ulivZoneRank||[])[i]||0).filter(v=>v>0);
+      r.ulivZoneRank[i] = zr.length ? Math.round(zr.reduce((a,x)=>a+x,0)/zr.length*10)/10 : null;
+      const zp = dates.map(d => (byDate[d][key]?.marketZoneP50||[])[i]||0).filter(v=>v>0);
+      r.marketZoneP50[i] = zp.length ? Math.round(zp.reduce((a,x)=>a+x,0)/zp.length) : null;
+    });
+    return r;
+  };
+  const avgUlivProps = () => {
+    const byName = {};
+    dates.forEach(d => {
+      (byDate[d].uliv_props || []).forEach(p => {
+        if (!byName[p.name]) byName[p.name] = { appearances:0, ranks:[], prices:[], medians:[] };
+        byName[p.name].appearances += p.appearances || 0;
+        if (p.avg_rank)     byName[p.name].ranks.push(p.avg_rank);
+        if (p.price_mean)   byName[p.name].prices.push(p.price_mean);
+        if (p.price_median) byName[p.name].medians.push(p.price_median);
+      });
+    });
+    return Object.entries(byName).map(([name, v]) => ({
+      name,
+      appearances: v.appearances,
+      avg_rank:     v.ranks.length   ? Math.round(v.ranks.reduce((a,x)=>a+x,0)/v.ranks.length*10)/10   : null,
+      bestRank:     v.ranks.length   ? Math.min(...v.ranks)                                              : null,
+      price_mean:   v.prices.length  ? Math.round(v.prices.reduce((a,x)=>a+x,0)/v.prices.length)        : null,
+      price_median: v.medians.length ? Math.round(v.medians.reduce((a,x)=>a+x,0)/v.medians.length)      : null,
+    })).sort((a,b) => b.appearances - a.appearances);
+  };
+  const avgAztecaData = () => {
+    const byName = {};
+    dates.forEach(d => {
+      (byDate[d].aztecaData || []).forEach(h => {
+        if (!byName[h.name]) byName[h.name] = { ranks:[], brand:h.brand };
+        if (h.ranking) byName[h.name].ranks.push(h.ranking);
+      });
+    });
+    return Object.entries(byName).map(([name, v]) => ({
+      name, brand: v.brand,
+      ranking: v.ranks.length ? Math.round(v.ranks.reduce((a,x)=>a+x,0)/v.ranks.length*10)/10 : null,
+    })).filter(h => h.ranking).sort((a,b) => a.ranking - b.ranking).slice(0,20);
+  };
+  const uvp = dates.map(d => byDate[d].ulivPriceMed||0).filter(v=>v>0);
+  return {
+    rankOverall:  avgBrand('rankOverall'),
+    appTotal:     avgBrandInt('appTotal'),
+    avgPrice:     avgBrand('avgPrice'),
+    avgScore:     avgBrand('avgScore'),
+    avgReviews:   avgBrand('avgReviews'),
+    rankByLoc:    avgRankByLoc(),
+    ulivByLoc:    avgUlivByLoc(),
+    uliv_props:   avgUlivProps(),
+    aztecaData:   avgAztecaData(),
+    market:       avgMktObj('market'),
+    ulivPriceMed: uvp.length ? Math.round(uvp.reduce((a,x)=>a+x,0)/uvp.length) : 0,
+    booking:      avgOta('booking'),
+    expedia:      avgOta('expedia'),
+  };
+}
+byDate['General'] = computeGeneral();
+
+// ====== DEFAULT DATE: General ======
+let currentDate = 'General';
+let rankOverall  = byDate['General'].rankOverall;
+let avgPrice     = byDate['General'].avgPrice;
+let avgScore     = byDate['General'].avgScore;
+let avgReviews   = byDate['General'].avgReviews;
+let appTotal     = byDate['General'].appTotal;
+let rankByLoc    = byDate['General'].rankByLoc;
+let uliv_by_loc  = byDate['General'].ulivByLoc;
+let uliv_props   = byDate['General'].uliv_props;
+let aztecaData   = byDate['General'].aztecaData;
+let market       = byDate['General'].market;
+let ulivPriceMed = byDate['General'].ulivPriceMed;
+let otaBooking   = byDate['Jun 10'].booking;
+let otaExpedia   = byDate['Jun 10'].expedia;
+const trend      = trendByMatch;
+const appCount   = appByMatch;
+const DATES      = MATCH_DATES;
 
 // ====== DATA HISTÓRICO ======
 const historico = {
-  fechas: ['27/03/2026','09/04/2026','07/05/2026','14/05/2026','21/05/2026','04/06/2026'],
+  fechas: ['27/03/2026','09/04/2026','07/05/2026','14/05/2026','21/05/2026','09/06/2026','09/06/2026'],
   rankOverall: {
-    ULIV:      [39.2, 44.6, 43.9, 42.3, 42.3, 41.5],
-    Lumina:    [36.7, 41.4, 43.5, 38.0, 39.0, 37.7],
-    Capitalia: [49.7, 53.8, 60.8, 51.7, 56.5, 50.6],
-    Kukun:     [56.2, 50.6, 57.0, 58.8, 56.6, 58.7],
-    'MR W':    [58.1, 52.6, 49.4, 47.3, 52.1, 51.8]
+    ULIV:      [39.2, 44.6, 43.9, 42.3, 42.3, 41.5, 43.7],
+    Lumina:    [36.7, 41.4, 43.5, 38.0, 39.0, 37.7, 32.7],
+    Capitalia: [49.7, 53.8, 60.8, 51.7, 56.5, 50.6, 55.7],
+    Kukun:     [56.2, 50.6, 57.0, 58.8, 56.6, 58.7, 52.2],
+    'MR W':    [58.1, 52.6, 49.4, 47.3, 52.1, 51.8, 52.8]
   },
   appTotal: {
-    ULIV:      [271, 186, 243, 228, 271, 239],
-    Lumina:    [78,  102, 100, 128, 131, 172],
-    Capitalia: [175, 274, 191, 258, 247, 305],
-    Kukun:     [63,   68,  67,  96, 131, 132],
-    'MR W':    [185, 167, 110, 103, 122, 102]
+    ULIV:      [271, 186, 243, 228, 271, 239, 406],
+    Lumina:    [78,  102, 100, 128, 131, 172, 215],
+    Capitalia: [175, 274, 191, 258, 247, 305, 425],
+    Kukun:     [63,   68,  67,  96, 131, 132, 250],
+    'MR W':    [185, 167, 110, 103, 122, 102, 172]
   },
   ulivByZone: {
     mar:  [26, 51, 24, 111, 59],
@@ -1443,7 +2080,8 @@ const historico = {
     may7: [38, 54,  6,  94, 51],
     may14:[20, 55,  4,  93, 56],
     may21:[40, 56,  4, 118, 53],
-    jun4: [34, 46,  0, 113, 46]
+    jun4: [34, 46,  0, 113, 46],
+    jun9: [38, 77, 23, 179, 89]
   },
   ulivRankByZone: {
     mar:  [14.2, 33.3, 62.7, 47.0, 30.8],
@@ -1451,7 +2089,8 @@ const historico = {
     may7: [31.1, 43.0, 91.8, 45.6, 45.5],
     may14:[27.2, 33.1, 96.0, 47.0, 45.1],
     may21:[18.0, 37.0, 97.0, 47.0, 42.0],
-    jun4: [66.6, 21.4, null, 45.3, 33.5]
+    jun4: [66.6, 21.4, null, 45.3, 33.5],
+    jun9: [41.7, 32.5, 75.5, 48.6, 37.1]
   }
 }
 // NAV
@@ -1460,6 +2099,70 @@ function showSection(id, btn) {
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+}
+
+// DATE LOADER
+function loadDate(label) {
+  currentDate  = label;
+  const d      = byDate[label];
+  rankOverall  = d.rankOverall;
+  avgPrice     = d.avgPrice;
+  avgScore     = d.avgScore;
+  avgReviews   = d.avgReviews;
+  appTotal     = d.appTotal;
+  rankByLoc    = d.rankByLoc;
+  uliv_by_loc  = d.ulivByLoc;
+  uliv_props   = d.uliv_props;
+  aztecaData   = d.aztecaData;
+  market       = d.market;
+  ulivPriceMed = d.ulivPriceMed;
+  otaBooking   = d.booking;
+  otaExpedia   = d.expedia;
+
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+
+  // Overview KPIs
+  set('currentDateTitle', label);
+  set('kpiUlivRank',     '#' + rankOverall['ULIV']);
+  set('kpiUlivScore',    avgScore['ULIV']);
+  set('kpiUlivPriceMed', '$' + ulivPriceMed);
+  set('kpiUlivApps',     appTotal['ULIV']);
+
+  // OTA KPIs
+  set('kpiBkgApps',   otaBooking.appByBrand['ULIV']);
+  set('kpiBkgRank',   '#' + otaBooking.rankByBrand['ULIV']);
+  set('kpiBkgPrice',  '$' + otaBooking.ulivPriceMed);
+  set('kpiBkgScore',  otaBooking.scoreByBrand['ULIV']);
+  set('kpiExpApps',   otaExpedia.appByBrand['ULIV']);
+  set('kpiExpRank',   '#' + otaExpedia.rankByBrand['ULIV']);
+  set('kpiExpPrice',  '$' + otaExpedia.ulivPriceMed);
+  set('kpiExpScore',  otaExpedia.scoreByBrand['ULIV']);
+
+  // Sync custom selector
+  const lbl = document.getElementById('selectedDateLabel');
+  const labels = {'General':'General — Todos los partidos','Jun 10':'Jun 10–12 · Partido 1','Jun 16':'Jun 16–18 · Partido 2','Jun 24':'Jun 24–26 · Partido 3','Jun 29':'Jun 29–Jul 1 · Partido 4','Jul 4':'Jul 4–6 · Partido 5'};
+  if (lbl) lbl.textContent = labels[label] || label;
+  // Mark active option
+  document.querySelectorAll('.csel-opt').forEach(el => {
+    el.classList.toggle('active', el.textContent.trim() === (labels[label] || label));
+  });
+
+  // Rebuild tables
+  document.getElementById('heatmapBody').innerHTML = '';
+  buildHeatmap();
+  document.getElementById('propsTableBody').innerHTML = '';
+  buildPropsTable();
+
+  // Rebuild all dynamic charts
+  initCharts();
+  buildPosicionInsights();
+  buildPropsSection();
+  buildCompInsights();
+  buildTemporalSection();
+  buildOtaSection();
+  buildHistoricoInsights();
+  buildRecStatus();
+  buildPreciosKpis();
 }
 
 // HEATMAP
@@ -1886,6 +2589,13 @@ function initCharts() {
           backgroundColor: '#9b5de599',
           borderColor: '#9b5de5',
           borderWidth: 2, borderRadius: 4
+        },
+        {
+          label: '09/06/2026',
+          data: historico.ulivRankByZone.jun9,
+          backgroundColor: '#e6383899',
+          borderColor: '#e63838',
+          borderWidth: 2, borderRadius: 4
         }
       ]
     },
@@ -1947,6 +2657,13 @@ function initCharts() {
           backgroundColor: '#9b5de555',
           borderColor: '#9b5de5',
           borderWidth: 2, borderRadius: 4
+        },
+        {
+          label: '09/06/2026',
+          data: BRANDS.map(b => historico.appTotal[b][6]),
+          backgroundColor: '#e6383855',
+          borderColor: '#e63838',
+          borderWidth: 2, borderRadius: 4
         }
       ]
     },
@@ -2005,6 +2722,13 @@ function initCharts() {
           backgroundColor: '#9b5de555',
           borderColor: '#9b5de5',
           borderWidth: 2, borderRadius: 4
+        },
+        {
+          label: '09/06/2026',
+          data: BRANDS.map(b => historico.rankOverall[b][6]),
+          backgroundColor: '#e6383855',
+          borderColor: '#e63838',
+          borderWidth: 2, borderRadius: 4
         }
       ]
     },
@@ -2062,6 +2786,13 @@ function initCharts() {
           data: historico.ulivByZone.jun4,
           backgroundColor: '#9b5de599',
           borderColor: '#9b5de5',
+          borderWidth: 2, borderRadius: 4
+        },
+        {
+          label: '09/06/2026',
+          data: historico.ulivByZone.jun9,
+          backgroundColor: '#e6383899',
+          borderColor: '#e63838',
           borderWidth: 2, borderRadius: 4
         }
       ]
@@ -2133,14 +2864,14 @@ function initCharts() {
     }
   }
   const hist = {
-    dates: ['25-26 Mar', '8-9 Abr', '7 May', '14 May', '21 May', '4 Jun'],
+    dates: ['25-26 Mar', '8-9 Abr', '7 May', '14 May', '21 May', '4 Jun', '9 Jun'],
     market: {
-      p25:    [426, 447, 382, 414, 378, 302],
-      median: [871, 866, 669, 670, 576, 450],
-      p75:    [1533, 1529, 1154, 1095, 932, 720]
+      p25:    [426, 447, 382, 414, 378, 302, 269],
+      median: [871, 866, 669, 670, 576, 450, 417],
+      p75:    [1533, 1529, 1154, 1095, 932, 720, 700]
     },
     uliv: {
-      median: [1318, 1674, 1431, 1110, 871, 598]
+      median: [1318, 1674, 1431, 1110, 871, 598, 686]
     },
     ranges: {
       labels: ['<$500','$500-750','$750-1k','$1k-1.5k','$1.5k-2.5k','$2.5k+'],
@@ -2149,12 +2880,14 @@ function initCharts() {
       may7:   [36.8, 18.4, 14.0, 14.2, 10.2,  6.4],
       may14:  [34.0, 22.1, 13.7, 17.1,  8.2,  4.9],
       may21:  [43.0, 20.6, 15.1, 11.5,  6.6,  3.3],
-      jun4:   [56.4, 20.6,  9.3,  7.6,  4.6,  1.5]
+      jun4:   [56.4, 20.6,  9.3,  7.6,  4.6,  1.5],
+      jun9:   [60.0, 19.0,  9.0,  7.0,  4.0,  1.0]
     }
   }
   // Brand legend
   const mktLegendEl = document.getElementById('mktBrandLegend');
   if (mktLegendEl) {
+    mktLegendEl.innerHTML = '';
     mkt.brands.filter(b => b.name !== 'Otros').forEach(b => {
       mktLegendEl.innerHTML += `<span class="legend-item"><span class="legend-dot" style="background:${BRAND_COLORS_MKT[b.name]||'#adb5bd'}"></span>${b.name}</span>`;
     });
@@ -2302,22 +3035,21 @@ function initCharts() {
   makeChart('chartMktZone', {
     type: 'bar',
     data: {
-      labels: mkt.zones.labels,
+      labels: LOCS_SHORT,
       datasets: [
         {
-          label: 'Precio mediano (USD)',
-          data: mkt.zones.medPrice,
-          backgroundColor: ['#457b9d88','#e76f5188','#52b78888','#e9c46a88','#2d6a4f88'],
-          borderColor:      ['#457b9d','#e76f51','#52b788','#e9c46a','#2d6a4f'],
+          label: 'Expedia P50',
+          data: otaExpedia.marketZoneP50 || [],
+          backgroundColor: 'rgba(200,144,10,0.55)',
+          borderColor: '#c8900a',
           borderWidth: 2, borderRadius: 6
         },
         {
-          label: 'Precio promedio (USD)',
-          data: mkt.zones.meanPrice,
-          type: 'line',
-          borderColor: '#1a1a2e', backgroundColor: 'transparent',
-          fill: false, tension: 0.2, pointRadius: 7, borderWidth: 2,
-          pointBackgroundColor: ['#457b9d','#e76f51','#52b788','#e9c46a','#2d6a4f']
+          label: 'Booking P50',
+          data: otaBooking.marketZoneP50 || [],
+          backgroundColor: 'rgba(0,53,128,0.55)',
+          borderColor: '#003580',
+          borderWidth: 2, borderRadius: 6
         }
       ]
     },
@@ -2389,7 +3121,7 @@ function initCharts() {
 
   // Market table
   const mktTableBody = document.getElementById('mktTableBody');
-  if (mktTableBody) {
+  if (mktTableBody && mktTableBody.innerHTML.trim() === '') {
     const segOf = p => p < 500 ? 'Budget' : p < 800 ? 'Mid' : p < 1200 ? 'Upper' : 'Premium';
     const segBg  = {Budget:'#d8f3dc', Mid:'#fff3bf', Upper:'#ffd8b1', Premium:'#ffd6d6'};
     const segTxt = {Budget:'#1b4332', Mid:'#7d4f00', Upper:'#7c3a00', Premium:'#7c1b1b'};
@@ -2463,10 +3195,11 @@ function initCharts() {
     data: {
       labels: hist.ranges.labels,
       datasets: [
-        {label: 'Mar 2026', data: hist.ranges.mar, backgroundColor: '#457b9d88', borderColor: '#457b9d', borderWidth: 1.5, borderRadius: 4},
-        {label: 'Abr 2026', data: hist.ranges.abr, backgroundColor: '#e9c46a88', borderColor: '#e9c46a', borderWidth: 1.5, borderRadius: 4},
-        {label: '7 May 2026', data: hist.ranges.may7, backgroundColor: '#52b78888', borderColor: '#52b788', borderWidth: 1.5, borderRadius: 4},
-        {label: '14 May 2026', data: hist.ranges.may14, backgroundColor: '#2d6a4fcc', borderColor: '#2d6a4f', borderWidth: 1.5, borderRadius: 4}
+        {label: 'Mar 2026',     data: hist.ranges.mar,   backgroundColor: '#457b9d55', borderColor: '#457b9d', borderWidth: 1.5, borderRadius: 4},
+        {label: 'Abr 2026',     data: hist.ranges.abr,   backgroundColor: '#e9c46a55', borderColor: '#e9c46a', borderWidth: 1.5, borderRadius: 4},
+        {label: '21 May 2026',  data: hist.ranges.may21, backgroundColor: '#f8961e88', borderColor: '#f8961e', borderWidth: 1.5, borderRadius: 4},
+        {label: '4 Jun 2026',   data: hist.ranges.jun4,  backgroundColor: '#9b5de599', borderColor: '#9b5de5', borderWidth: 1.5, borderRadius: 4},
+        {label: '9 Jun 2026',   data: hist.ranges.jun9,  backgroundColor: '#e6383899', borderColor: '#e63838', borderWidth: 1.5, borderRadius: 4}
       ]
     },
     options: {
@@ -2488,26 +3221,7 @@ function initCharts() {
 
 
   // ====== OTA ANALYSIS ======
-  const otaData = {
-    booking: {
-      rankByBrand:  {ULIV:36.3, Lumina:35.1, Capitalia:53.9, Kukun:52.7, 'MR W':45.4},
-      appByBrand:   {ULIV:83,   Lumina:52,   Capitalia:196,  Kukun:86,   'MR W':61},
-      scoreByBrand: {ULIV:8.53, Lumina:8.79, Capitalia:8.68, Kukun:8.20, 'MR W':8.57},
-      market: {p25:262, median:391, p75:662},
-      marketZoneP50: [316, 412, null, 777, 364],
-      ulivZoneApp:   [1,   18,  0,   40,  24],
-      ulivZoneRank:  [89.0,33.3,null,38.5,32.8]
-    },
-    expedia: {
-      rankByBrand:  {ULIV:44.2, Lumina:38.9, Capitalia:44.7, Kukun:69.8, 'MR W':61.5},
-      appByBrand:   {ULIV:156,  Lumina:120,  Capitalia:109,  Kukun:46,   'MR W':41},
-      scoreByBrand: {ULIV:9.31, Lumina:9.10, Capitalia:9.03, Kukun:8.84, 'MR W':9.24},
-      market: {p25:353, median:506, p75:754},
-      marketZoneP50: [427, 478, null, 675, 516],
-      ulivZoneApp:   [33,  28,  0,   73,  22],
-      ulivZoneRank:  [65.9,13.8,null,49.0,34.3]
-    }
-  };
+  // otaBooking / otaExpedia are set by loadDate()
 
   const OTA_COLORS = {
     booking: {bg:'rgba(0,53,128,0.75)', border:'#003580'},
@@ -2519,8 +3233,8 @@ function initCharts() {
     data: {
       labels: BRANDS,
       datasets: [
-        {label:'Booking', data:BRANDS.map(b=>otaData.booking.rankByBrand[b]), backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
-        {label:'Expedia', data:BRANDS.map(b=>otaData.expedia.rankByBrand[b]), backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
+        {label:'Booking', data:BRANDS.map(b=>otaBooking.rankByBrand[b]), backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
+        {label:'Expedia', data:BRANDS.map(b=>otaExpedia.rankByBrand[b]), backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': #'+c.parsed.y}}},scales:{y:{title:{display:true,text:'Posición media (menor = mejor)'},grid:{color:'#e8e5df'}}}}
@@ -2531,8 +3245,8 @@ function initCharts() {
     data: {
       labels: BRANDS,
       datasets: [
-        {label:'Booking', data:BRANDS.map(b=>otaData.booking.appByBrand[b]), backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
-        {label:'Expedia', data:BRANDS.map(b=>otaData.expedia.appByBrand[b]), backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
+        {label:'Booking', data:BRANDS.map(b=>otaBooking.appByBrand[b]), backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
+        {label:'Expedia', data:BRANDS.map(b=>otaExpedia.appByBrand[b]), backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+' apariciones'}}},scales:{y:{title:{display:true,text:'Apariciones en top 100'},grid:{color:'#e8e5df'}}}}
@@ -2543,8 +3257,8 @@ function initCharts() {
     data: {
       labels: LOCS_SHORT,
       datasets: [
-        {label:'Booking', data:otaData.booking.ulivZoneApp, backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
-        {label:'Expedia', data:otaData.expedia.ulivZoneApp, backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
+        {label:'Booking', data:otaBooking.ulivZoneApp, backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
+        {label:'Expedia', data:otaExpedia.ulivZoneApp, backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+' apariciones'}}},scales:{y:{title:{display:true,text:'Apariciones ULIV en top 100'},grid:{color:'#e8e5df'}}}}
@@ -2555,8 +3269,8 @@ function initCharts() {
     data: {
       labels: LOCS_SHORT,
       datasets: [
-        {label:'Booking', data:otaData.booking.ulivZoneRank, backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
-        {label:'Expedia', data:otaData.expedia.ulivZoneRank, backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
+        {label:'Booking', data:otaBooking.ulivZoneRank, backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
+        {label:'Expedia', data:otaExpedia.ulivZoneRank, backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.parsed.y?'#'+c.parsed.y:'no aparece')}}},scales:{y:{title:{display:true,text:'Posición media ULIV (menor = mejor)'},grid:{color:'#e8e5df'}}}}
@@ -2567,8 +3281,8 @@ function initCharts() {
     data: {
       labels: BRANDS,
       datasets: [
-        {label:'Booking', data:BRANDS.map(b=>otaData.booking.scoreByBrand[b]), backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
-        {label:'Expedia', data:BRANDS.map(b=>otaData.expedia.scoreByBrand[b]), backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
+        {label:'Booking', data:BRANDS.map(b=>otaBooking.scoreByBrand[b]), backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
+        {label:'Expedia', data:BRANDS.map(b=>otaExpedia.scoreByBrand[b]), backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)}}},scales:{y:{title:{display:true,text:'Score promedio'},min:7.5,max:10,grid:{color:'#e8e5df'}}}}
@@ -2579,8 +3293,8 @@ function initCharts() {
     data: {
       labels: ['ULIV — precio medio', 'Mercado — P50'],
       datasets: [
-        {label:'Booking', data:[506, 391], backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
-        {label:'Expedia', data:[630, 506], backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
+        {label:'Booking', data:[otaBooking.ulivPriceMed||506, 391], backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
+        {label:'Expedia', data:[otaExpedia.ulivPriceMed||630, 506], backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': $'+c.parsed.y.toLocaleString()}}},scales:{y:{title:{display:true,text:'Precio USD'},grid:{color:'#e8e5df'},ticks:{callback:v=>'$'+v.toLocaleString()}}}}
@@ -2591,17 +3305,565 @@ function initCharts() {
     data: {
       labels: LOCS_SHORT,
       datasets: [
-        {label:'Booking — P50 mercado', data:otaData.booking.marketZoneP50, backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
-        {label:'Expedia — P50 mercado', data:otaData.expedia.marketZoneP50, backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
+        {label:'Booking — P50 mercado', data:otaBooking.marketZoneP50, backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
+        {label:'Expedia — P50 mercado', data:otaExpedia.marketZoneP50, backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': $'+c.parsed.y.toLocaleString()}}},scales:{y:{title:{display:true,text:'Precio mediano USD'},grid:{color:'#e8e5df'},ticks:{callback:v=>'$'+v.toLocaleString()}}}}
   });
 
+// STICKY NAV: adjust top to sit below sticky header
+function fixStickyNav() {
+  const header = document.querySelector('.header');
+  const nav    = document.querySelector('.nav');
+  if (header && nav) nav.style.top = header.getBoundingClientRect().height + 'px';
+}
+window.addEventListener('load', fixStickyNav);
+window.addEventListener('resize', fixStickyNav);
+
 // INIT
-buildHeatmap();
-buildPropsTable();
-initCharts();
+loadDate('General');
+
+// PRECIOS KPI (dynamic)
+function buildPreciosKpis() {
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  const d = byDate[currentDate];
+  if (!d) return;
+  const mktData = d.market || {};
+  const ulivMed = d.ulivPriceMed || 0;
+
+  // KPI cards
+  set('preciosUlivDate', currentDate);
+  set('preciosZoneDate', currentDate);
+  set('preciosDynDate',  currentDate);
+  if (mktData.median) {
+    const diff = Math.round(((ulivMed - mktData.median) / mktData.median) * 100);
+    set('preciosUlivDiff', (diff >= 0 ? '+' : '') + diff + '%');
+    const subEl = document.getElementById('preciosUlivSub');
+    if (subEl) subEl.textContent = `$${ulivMed} ULIV vs $${mktData.median} mercado · ${currentDate}`;
+  }
+
+  // Zone note
+  const zoneNote = document.getElementById('preciosZoneNote');
+  if (zoneNote && otaExpedia.marketZoneP50) {
+    const LOCS = ['CDMX','Condesa','Azteca','Polanco','Roma Norte'];
+    const pairs = LOCS.map((z,i) => `${z}: Exp $${otaExpedia.marketZoneP50[i]||'—'} · Bkg $${(otaBooking.marketZoneP50||[])[i]||'—'}`);
+    zoneNote.textContent = pairs.join(' · ') + '.';
+  }
+
+  // Dynamic summary card
+  const body = document.getElementById('preciosDynBody');
+  if (!body) return;
+
+  const bkgMkt  = (d.booking  || {}).market || {};
+  const expMkt  = (d.expedia  || {}).market || {};
+  const bkgUliv = (d.booking  || {}).ulivPriceMed || 0;
+  const expUliv = (d.expedia  || {}).ulivPriceMed || 0;
+
+  // Brand prices sorted by average
+  const brandPrices = BRANDS.map(b => ({b, p: Math.round(avgPrice[b] || 0)}))
+    .filter(x => x.p > 0).sort((a,z) => a.p - z.p);
+
+  const priceBars = brandPrices.map(({b, p}) => {
+    const pct = Math.min(100, Math.round((p / 1200) * 100));
+    const color = b === 'ULIV' ? 'var(--uliv)' : (COLORS[b] || '#adb5bd');
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span style="width:90px;font-size:12px;font-weight:${b==='ULIV'?'800':'500'};color:${b==='ULIV'?'var(--uliv)':'#555'}">${b}</span>
+      <div style="flex:1;background:#f0ede7;border-radius:4px;height:18px;position:relative">
+        <div style="width:${pct}%;background:${color};height:100%;border-radius:4px;opacity:${b==='ULIV'?1:0.7}"></div>
+      </div>
+      <span style="width:52px;font-size:12px;font-weight:${b==='ULIV'?'700':'400'};text-align:right">$${p}</span>
+    </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="grid2" style="gap:20px;margin-bottom:16px">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Cuartiles del mercado combinado</div>
+        <div style="display:flex;gap:10px;margin-bottom:6px">
+          <div style="flex:1;background:#f7f5f0;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:10px;color:#888;font-weight:600">P25</div>
+            <div style="font-size:18px;font-weight:800;color:#457b9d">$${mktData.p25||'—'}</div>
+          </div>
+          <div style="flex:1;background:#2d6a4f15;border-radius:8px;padding:10px;text-align:center;border:2px solid #2d6a4f44">
+            <div style="font-size:10px;color:#888;font-weight:600">MEDIANA</div>
+            <div style="font-size:18px;font-weight:800;color:#2d6a4f">$${mktData.median||'—'}</div>
+          </div>
+          <div style="flex:1;background:#f7f5f0;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:10px;color:#888;font-weight:600">P75</div>
+            <div style="font-size:18px;font-weight:800;color:#e76f51">$${mktData.p75||'—'}</div>
+          </div>
+          <div style="flex:1;background:#2d6a4fdd;border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:10px;color:#ffffffcc;font-weight:600">ULIV</div>
+            <div style="font-size:18px;font-weight:800;color:white">$${ulivMed||'—'}</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#888;margin-top:6px">
+          Expedia: P50 $${expMkt.median||'—'} · ULIV $${expUliv||'—'} &nbsp;|&nbsp; Booking: P50 $${bkgMkt.median||'—'} · ULIV $${bkgUliv||'—'}
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Precio promedio por marca · ${currentDate}</div>
+        ${priceBars}
+      </div>
+    </div>`;
+}
+
+// OTA SECTION (dynamic)
+function buildOtaSection() {
+  const ZONES_SHORT = ['CDMX','Condesa','Azteca','Polanco','Roma Norte'];
+
+  // Rank note
+  const bkgRanks = BRANDS.map(b=>`${b}: #${otaBooking.rankByBrand[b]||'—'}`).join(' · ');
+  const expRanks = BRANDS.map(b=>`${b}: #${otaExpedia.rankByBrand[b]||'—'}`).join(' · ');
+  const el1 = document.getElementById('otaRankNote');
+  if (el1) el1.textContent = `Booking: ${bkgRanks}. Expedia: ${expRanks}.`;
+
+  // App note
+  const bkgApps = BRANDS.map(b=>`${b}: ${otaBooking.appByBrand[b]||0}`).join(' · ');
+  const expApps = BRANDS.map(b=>`${b}: ${otaExpedia.appByBrand[b]||0}`).join(' · ');
+  const el2 = document.getElementById('otaAppNote');
+  if (el2) el2.textContent = `Apariciones Booking: ${bkgApps}. Expedia: ${expApps}.`;
+
+  // Zone app note
+  const bkgZoneApp = (otaBooking.ulivZoneApp||[]).map((v,i)=>`${ZONES_SHORT[i]}: ${v}`).join(' · ');
+  const expZoneApp = (otaExpedia.ulivZoneApp||[]).map((v,i)=>`${ZONES_SHORT[i]}: ${v}`).join(' · ');
+  const el3 = document.getElementById('otaZoneAppNote');
+  if (el3) el3.textContent = `ULIV apps por zona — Booking: ${bkgZoneApp}. Expedia: ${expZoneApp}.`;
+
+  // Zone rank note
+  const bkgZoneRank = (otaBooking.ulivZoneRank||[]).map((v,i)=>v?`${ZONES_SHORT[i]}: #${v}`:'').filter(Boolean).join(' · ');
+  const expZoneRank = (otaExpedia.ulivZoneRank||[]).map((v,i)=>v?`${ZONES_SHORT[i]}: #${v}`:'').filter(Boolean).join(' · ');
+  const el4 = document.getElementById('otaZoneRankNote');
+  if (el4) el4.textContent = `Posición por zona — Booking: ${bkgZoneRank}. Expedia: ${expZoneRank}.`;
+
+  // Score note
+  const bkgScore = BRANDS.map(b=>`${b}: ${otaBooking.scoreByBrand[b]||'—'}`).join(' · ');
+  const expScore = BRANDS.map(b=>`${b}: ${otaExpedia.scoreByBrand[b]||'—'}`).join(' · ');
+  const el5 = document.getElementById('otaScoreNote');
+  if (el5) el5.textContent = `Scores — Booking: ${bkgScore}. Expedia: ${expScore}.`;
+
+  // Price note
+  const el6 = document.getElementById('otaPriceNote');
+  if (el6) el6.textContent = `ULIV mediana — Booking: $${otaBooking.ulivPriceMed||'—'} · Expedia: $${otaExpedia.ulivPriceMed||'—'}. Nota: Booking capturado con VPN Dallas, TX — comparar tendencias relativas, no valores absolutos.`;
+
+  // Insights
+  const ulivBkgApps = otaBooking.appByBrand['ULIV'] || 0;
+  const ulivExpApps = otaExpedia.appByBrand['ULIV'] || 0;
+  const ulivBkgRank = otaBooking.rankByBrand['ULIV'] || 0;
+  const ulivExpRank = otaExpedia.rankByBrand['ULIV'] || 0;
+  const topOta     = ulivBkgRank < ulivExpRank ? 'Booking' : 'Expedia';
+  const volOta     = ulivExpApps > ulivBkgApps ? 'Expedia' : 'Booking';
+
+  let html = '';
+
+  // Platform complementarity
+  html += `<div class="insight positive"><div class="insight-icon">✅</div><div>
+    <div class="insight-title">${volOta} es la plataforma de mayor volumen ULIV — ${Math.max(ulivBkgApps,ulivExpApps)} apariciones para ${currentDate}</div>
+    <div class="insight-text">Booking: ${ulivBkgApps} apps · #${ulivBkgRank}. Expedia: ${ulivExpApps} apps · #${ulivExpRank}. ${topOta} da mejor posición. Las dos OTAs son complementarias: una por volumen, otra por calidad de posición.</div>
+  </div></div>`;
+
+  // Competitor in each OTA
+  const topBkg = BRANDS.filter(b=>b!=='ULIV').sort((a,z)=>(otaBooking.appByBrand[a]||0)<(otaBooking.appByBrand[z]||0)?1:-1)[0];
+  const topExp = BRANDS.filter(b=>b!=='ULIV').sort((a,z)=>(otaExpedia.appByBrand[a]||0)<(otaExpedia.appByBrand[z]||0)?1:-1)[0];
+  if (topBkg || topExp) {
+    html += `<div class="insight info"><div class="insight-icon">📉</div><div>
+      <div class="insight-title">Competidores principales: ${topBkg} en Booking · ${topExp} en Expedia</div>
+      <div class="insight-text">Booking: ${topBkg} lidera con ${otaBooking.appByBrand[topBkg]||0} apps. Expedia: ${topExp} lidera con ${otaExpedia.appByBrand[topExp]||0} apps. Los competidores difieren entre plataformas para ${currentDate}.</div>
+    </div></div>`;
+  }
+
+  // Price disclaimer
+  html += `<div class="insight warning"><div class="insight-icon">💰</div><div>
+    <div class="insight-title">Precios referenciales — comparar con cautela entre OTAs</div>
+    <div class="insight-text">Los precios de Booking se capturaron con VPN en Dallas, TX, lo que puede excluir impuestos locales. Use los datos para entender posicionamiento relativo dentro de cada plataforma, no para comparar valores absolutos entre OTAs.</div>
+  </div></div>`;
+
+  const el7 = document.getElementById('otaInsights');
+  if (el7) el7.innerHTML = html;
+}
+
+// HISTORICO INSIGHTS (dynamic)
+function buildHistoricoInsights() {
+  const el = document.getElementById('histInsights');
+  if (!el) return;
+
+  const ulivRankHist = historico.rankOverall['ULIV'] || [];
+  const luminaRankHist = historico.rankOverall['Lumina'] || [];
+  const n = ulivRankHist.length;
+  if (n === 0) return;
+
+  const ulivFirst = ulivRankHist[0], ulivLast = ulivRankHist[n-1];
+  const ulivMin   = Math.min(...ulivRankHist);
+  const luminaLast = luminaRankHist[n-1] || 0;
+
+  let html = '';
+
+  // Price-position pattern
+  html += `<div class="insight positive"><div class="insight-icon">📈</div><div>
+    <div class="insight-title">7 períodos: precio bajo relativo al mercado coincide con mejor posición ULIV</div>
+    <div class="insight-text">El historial de 7 scraping confirma el patrón: precio alto ($1,674 Abr) coincidió con la peor posición; precio bajo (Jun 4: mínimo histórico $598) coincidió con la mejor relación precio-posición. El patrón aplica específicamente a ULIV — no es universal entre marcas del mercado.</div>
+  </div></div>`;
+
+  // Lumina trend
+  html += `<div class="insight warning"><div class="insight-icon">🔴</div><div>
+    <div class="insight-title">Lumina: líder general en Jun 9 con #${luminaLast} — presión creciente</div>
+    <div class="insight-text">Lumina alcanza #${luminaLast} en Jun 9 — su mejor registro histórico. Domina en zonas premium (Condesa, Roma Norte). La brecha Lumina-ULIV es el principal riesgo de posicionamiento para el Mundial.</div>
+  </div></div>`;
+
+  // Azteca recovery
+  html += `<div class="insight positive"><div class="insight-icon">🏟️</div><div>
+    <div class="insight-title">Azteca recupera 23 apariciones en Jun 9 tras 0 en Jun 4</div>
+    <div class="insight-text">La zona Azteca vuelve a mostrar actividad ULIV en Jun 9 (23 apariciones vs 0 en Jun 4 y 4 en May21). Es el movimiento más positivo del período para la zona de mayor relevancia del Mundial.</div>
+  </div></div>`;
+
+  // Strategy reminder
+  html += `<div class="insight tip"><div class="insight-icon">🎯</div><div>
+    <div class="insight-title">Señal de 7 períodos: mantener precio relativo bajo para sostenerse en posición</div>
+    <div class="insight-text">La correlación precio-posición de ULIV es la lección más documentada del histórico: cada vez que el precio sube por encima del mercado, la posición retrocede. Con 5 partidos del Mundial activos, mantener precio competitivo es la palanca más probada para sostener el posicionamiento.</div>
+  </div></div>`;
+
+  el.innerHTML = html;
+}
+
+// RECOMENDACIONES STATUS (dynamic)
+function buildRecStatus() {
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('recDate',      currentDate);
+  set('recDatePrice', currentDate);
+  set('recUlivRank',  '#' + (rankOverall['ULIV'] || '—'));
+  set('recUlivPrice', '$' + (ulivPriceMed || '—'));
+
+  // Top competitor by rank
+  const topComp = BRANDS.filter(b=>b!=='ULIV').sort((a,z)=>(rankOverall[a]||999)-(rankOverall[z]||999))[0];
+  if (topComp) {
+    set('recTopComp', topComp);
+    set('recTopCompSub', `#${rankOverall[topComp]} · ${appTotal[topComp]} apps · ${currentDate}`);
+  }
+
+  const rank = rankOverall['ULIV'] || 0;
+  const bestComp = rankOverall[topComp] || 0;
+  const statusEl = document.getElementById('recUlivSub');
+  if (statusEl) {
+    statusEl.textContent = rank > 0
+      ? `${rank < bestComp ? '↗ líder vs' : '↔ vs'} ${topComp} #${bestComp} · ${appTotal['ULIV']} apps`
+      : 'fecha seleccionada';
+  }
+}
+
+// PROPS SECTION (dynamic)
+function buildPropsSection() {
+  const props = uliv_props || [];
+  const total = appTotal['ULIV'] || 0;
+
+  // KPI Grid
+  const byRank = [...props].filter(p => p.avg_rank).sort((a,b) => a.avg_rank - b.avg_rank);
+  const byApps = [...props].sort((a,b) => b.appearances - a.appearances);
+  const isGeneral = props.length > 0 && props[0].bestRank !== undefined;
+  const rankFor  = p => isGeneral ? p.bestRank : p.avg_rank;
+  const top20    = props.filter(p => rankFor(p) && rankFor(p) <= 20).length;
+  const best   = byRank[0] || {};
+  const mostFreq = byApps[0] || {};
+  const shortName = n => n.replace('ULIV ','').replace(' by ULIV','').replace('UTOPIC ','');
+
+  const kpiGrid = document.getElementById('propsKpiGrid');
+  if (kpiGrid) kpiGrid.innerHTML = `
+    <div class="kpi"><div class="kpi-label">Propiedades únicas detectadas</div><div class="kpi-value">${props.length}</div><div class="kpi-sub">fecha seleccionada</div></div>
+    <div class="kpi"><div class="kpi-label">Mejor posición media</div><div class="kpi-value good-val">#${best.avg_rank||'—'}</div><div class="kpi-sub">${shortName(best.name||'—')} · ${currentDate}</div></div>
+    <div class="kpi"><div class="kpi-label">Propiedad más frecuente</div><div class="kpi-value">${shortName(mostFreq.name||'—')}</div><div class="kpi-sub">${mostFreq.appearances||0} apariciones · ${currentDate}</div></div>
+    <div class="kpi info"><div class="kpi-label">${isGeneral ? "Props con top 20 en algún partido" : "Propiedades en top 20"}</div><div class="kpi-value good-val">${top20}</div><div class="kpi-sub">${isGeneral ? "mejor posición ≤ 20 en ≥ 1 partido" : "posición media ≤ 20 · " + currentDate}</div></div>
+  `;
+
+  // Insights
+  const el = document.getElementById('propsInsights');
+  if (!el) return;
+  let html = '';
+
+  if (byRank.length >= 3) {
+    const top3 = byRank.slice(0,3).map(p => `${shortName(p.name)} (#${p.avg_rank})`).join(', ');
+    html += `<div class="insight positive"><div class="insight-icon">🏆</div><div>
+      <div class="insight-title">Top 3 de posición: ${byRank.slice(0,3).map(p=>shortName(p.name)).join(', ')}</div>
+      <div class="insight-text">Las tres propiedades con mejor posición para ${currentDate}: ${top3}. ${shortName(byRank[0].name)} lidera con ${byRank[0].appearances} apariciones y posición #${byRank[0].avg_rank}.</div>
+    </div></div>`;
+  }
+
+  if (byApps[0] && byApps[0].name !== byRank[0]?.name) {
+    html += `<div class="insight info"><div class="insight-icon">🔢</div><div>
+      <div class="insight-title">${shortName(byApps[0].name)}: propiedad más visible — ${byApps[0].appearances} apariciones</div>
+      <div class="insight-text">${byApps[0].name} lidera en volumen con ${byApps[0].appearances} apariciones en el top 100 para ${currentDate}. Posición media: #${byApps[0].avg_rank||'—'}.</div>
+    </div></div>`;
+  }
+
+  const weak = byRank.filter(p => p.avg_rank > 50);
+  if (weak.length > 0) {
+    html += `<div class="insight warning"><div class="insight-icon">⚠️</div><div>
+      <div class="insight-title">${weak.length} propiedad${weak.length>1?'es':''} con posición >50 — requieren atención</div>
+      <div class="insight-text">${weak.map(p=>`${shortName(p.name)} (#${p.avg_rank})`).join(', ')}. Posición media superior a 50 implica visibilidad reducida para la mayoría de los usuarios.</div>
+    </div></div>`;
+  }
+
+  el.innerHTML = html;
+
+  // Chart notes
+  const top5freq = byApps.slice(0,5).map(p=>`${shortName(p.name)}: ${p.appearances}`).join(' · ');
+  const el1 = document.getElementById('propsFreqNote');
+  if (el1) el1.textContent = top5freq + ' apariciones.';
+
+  const top5rank = byRank.slice(0,5).map(p=>`${shortName(p.name)}: #${p.avg_rank}`).join(' · ');
+  const worst = byRank[byRank.length-1];
+  const el2 = document.getElementById('propsRankNote');
+  if (el2) el2.textContent = top5rank + (worst ? ` · Menor visibilidad: ${shortName(worst.name)} (#${worst.avg_rank}).` : '');
+
+  // Table note: most/least expensive by med_price
+  const byPrice = [...props].filter(p=>p.med_price).sort((a,b)=>b.med_price-a.med_price);
+  if (byPrice.length >= 2) {
+    const most  = byPrice[0];
+    const least = byPrice[byPrice.length-1];
+    const el3 = document.getElementById('propsTableNote');
+    if (el3) el3.textContent = `${shortName(most.name)} ($${most.med_price} mediana) es la propiedad más cara del portafolio. ${shortName(least.name)} ($${least.med_price} mediana) es la más económica para ${currentDate}.`;
+  }
+}
+
+// COMPETENCIA SECTION (dynamic)
+function buildCompInsights() {
+  const el = document.getElementById('compInsights');
+  if (!el) return;
+
+  const sortedRank  = [...BRANDS].sort((a,b) => (rankOverall[a]||999) - (rankOverall[b]||999));
+  const sortedApps  = [...BRANDS].sort((a,b) => (appTotal[b]||0)   - (appTotal[a]||0));
+  const sortedScore = [...BRANDS].sort((a,b) => (avgScore[b]||0)   - (avgScore[a]||0));
+  const sortedPrice = [...BRANDS].sort((a,b) => (avgPrice[a]||9999)- (avgPrice[b]||9999));
+
+  const top    = sortedRank[0];   // best rank overall
+  const bottom = sortedRank[sortedRank.length-1]; // worst rank
+  const mostVisible = sortedApps[0];
+  const bestScore   = sortedScore[0];
+  const cheapest    = sortedPrice[0];
+
+  let html = '';
+
+  // ULIV vs best competitor
+  const ulivRank = rankOverall['ULIV'] || 0;
+  const ulivApps = appTotal['ULIV'] || 0;
+  const topComp  = sortedRank.filter(b=>b!=='ULIV')[0];
+  if (topComp) {
+    const compRank = rankOverall[topComp]||0;
+    const type = ulivRank < compRank ? 'positive' : 'warning';
+    const icon = ulivRank < compRank ? '🏆' : '⚔️';
+    html += `<div class="insight ${type}"><div class="insight-icon">${icon}</div><div>
+      <div class="insight-title">ULIV #${ulivRank} vs ${topComp} #${compRank} — ${ulivRank<compRank?'ULIV lidera':''+topComp+' lidera'} para ${currentDate}</div>
+      <div class="insight-text">Para la fecha ${currentDate}: ULIV posiciona en #${ulivRank} con ${ulivApps} apariciones. ${topComp} está en #${compRank} con ${appTotal[topComp]||0} apariciones. ${ulivRank<compRank?'ULIV mantiene ventaja en posición.':'Oportunidad de mejora en posición frente al líder.'}</div>
+    </div></div>`;
+  }
+
+  // Reviews advantage
+  const ulivRev = avgReviews['ULIV'] || 0;
+  const compRevs = BRANDS.filter(b=>b!=='ULIV').map(b=>({b, r:avgReviews[b]||0})).sort((a,z)=>z.r-a.r);
+  if (ulivRev > 0 && compRevs.length > 0) {
+    const ratio = (ulivRev / Math.max(compRevs[0].r, 1)).toFixed(1);
+    html += `<div class="insight positive"><div class="insight-icon">🛡️</div><div>
+      <div class="insight-title">ULIV lidera en reviews: ${ulivRev} promedio vs ${compRevs[0].b} (${compRevs[0].r}) — ventaja ${ratio}×</div>
+      <div class="insight-text">ULIV (${ulivRev} reseñas) supera a ${compRevs.map(c=>`${c.b} (${c.r})`).join(', ')}. El volumen acumulado de reseñas es el activo competitivo más difícil de replicar a corto plazo.</div>
+    </div></div>`;
+  }
+
+  // Price landscape
+  if (avgPrice['ULIV']) {
+    const priceList = sortedPrice.map(b=>`${b}: $${avgPrice[b]}`).join(' · ');
+    html += `<div class="insight info"><div class="insight-icon">💰</div><div>
+      <div class="insight-title">Precios para ${currentDate}: ${priceList}</div>
+      <div class="insight-text">ULIV ($${avgPrice['ULIV']}) — ${sortedPrice[0]==='ULIV'?'precio más bajo del mercado':'por encima del más económico ('+sortedPrice[0]+' $'+avgPrice[sortedPrice[0]]+')'}. ${sortedScore[0]==='ULIV'?'ULIV lidera también en score ('+avgScore['ULIV']+').':'Score ULIV: '+avgScore['ULIV']+' vs líder '+sortedScore[0]+' ('+avgScore[sortedScore[0]]+')'}</div>
+    </div></div>`;
+  }
+
+  el.innerHTML = html;
+
+  // Chart notes
+  const appsLine = BRANDS.map(b=>`${b}: ${appByMatch[b]?.join('/')||'—'}`).join(' · ');
+  const el1 = document.getElementById('compCountNote');
+  if (el1) el1.textContent = `Apariciones por partido (${MATCH_DATES.join('/')}): ${appsLine}.`;
+
+  const priceLine = sortedPrice.map(b=>`${b}: $${avgPrice[b]}`).join(' · ');
+  const el2 = document.getElementById('compPriceNote');
+  if (el2) el2.textContent = `Precios para ${currentDate}: ${priceLine}.`;
+
+  const scoreLine = sortedScore.map(b=>`${b}: ${avgScore[b]}`).join(' · ');
+  const el3 = document.getElementById('compScoreNote');
+  if (el3) el3.textContent = `Scores para ${currentDate}: ${scoreLine}.`;
+}
+
+// TEMPORAL SECTION (dynamic)
+function buildTemporalSection() {
+  const ulivTrend = trendByMatch['ULIV'] || [];
+  const ulivApps  = appByMatch['ULIV']   || [];
+  const n = MATCH_DATES.length;
+
+  const el = document.getElementById('temporalInsights');
+  if (!el || n === 0) return;
+
+  // Find ULIV best/worst date
+  let bestIdx = 0, worstIdx = 0;
+  ulivTrend.forEach((v,i) => {
+    if (v < ulivTrend[bestIdx]) bestIdx = i;
+    if (v > ulivTrend[worstIdx]) worstIdx = i;
+  });
+
+  const first = ulivTrend[0], last = ulivTrend[n-1];
+  const improving = last < first;
+
+  let html = '';
+
+  // ULIV trend
+  const trendStr = ulivTrend.map((v,i) => `${MATCH_DATES[i]}: #${v}`).join(' → ');
+  const type1 = improving ? 'positive' : 'warning';
+  html += `<div class="insight ${type1}"><div class="insight-icon">${improving?'📈':'📉'}</div><div>
+    <div class="insight-title">ULIV ${improving?'mejora':'empeora'} hacia fechas tardías — ${MATCH_DATES[bestIdx]} es el mejor partido (#${ulivTrend[bestIdx]})</div>
+    <div class="insight-text">Tendencia ULIV: ${trendStr}. ${improving?'La mejora hacia fechas tardías indica precio competitivo y disponibilidad para el pico del torneo.':'La caída hacia fechas tardías sugiere menor disponibilidad o precio menos competitivo conforme avanza el torneo.'}</div>
+  </div></div>`;
+
+  // Find brand with most volume growth
+  const volChanges = BRANDS.map(b => {
+    const arr = appByMatch[b] || [];
+    return { b, delta: arr.length >= 2 ? arr[arr.length-1] - arr[0] : 0, arr };
+  }).sort((a,z) => z.delta - a.delta);
+  const grower = volChanges[0];
+  if (grower && grower.delta > 0) {
+    html += `<div class="insight positive"><div class="insight-icon">📅</div><div>
+      <div class="insight-title">${grower.b}: única marca con volumen creciente hacia ${MATCH_DATES[n-1]} (+${grower.delta} apps)</div>
+      <div class="insight-text">${grower.b} crece de ${grower.arr[0]} a ${grower.arr[n-1]} apariciones — el mejor perfil de disponibilidad sostenida del portafolio.</div>
+    </div></div>`;
+  }
+
+  // Brand with worst rank deterioration
+  const rankChanges = BRANDS.map(b => {
+    const arr = trendByMatch[b] || [];
+    return { b, delta: arr.length >= 2 ? arr[arr.length-1] - arr[0] : 0, arr };
+  }).sort((a,z) => z.delta - a.delta);
+  const worst = rankChanges[0];
+  if (worst && worst.delta > 5) {
+    html += `<div class="insight warning"><div class="insight-icon">🔴</div><div>
+      <div class="insight-title">${worst.b}: mayor deterioro de posición hacia ${MATCH_DATES[n-1]} (+${worst.delta.toFixed(1)} posiciones)</div>
+      <div class="insight-text">${worst.b} pasa de #${worst.arr[0]} a #${worst.arr[n-1]} — la mayor caída del período. Señal de precio o disponibilidad no competitivos hacia el pico del torneo.</div>
+    </div></div>`;
+  }
+
+  el.innerHTML = html;
+
+  // Chart notes
+  const trendNote = BRANDS.map(b => `${b}: ${(trendByMatch[b]||[]).join('→')}`).join(' · ');
+  const el1 = document.getElementById('trendNote');
+  if (el1) el1.textContent = `Posición por partido (${MATCH_DATES.join('/')}): ${trendNote}.`;
+
+  const countNote = BRANDS.map(b => `${b}: ${(appByMatch[b]||[]).join('→')}`).join(' · ');
+  const el2 = document.getElementById('trendCountNote');
+  if (el2) el2.textContent = `Apariciones por partido (${MATCH_DATES.join('/')}): ${countNote}.`;
+}
+
+// POSICION INSIGHTS (dynamic)
+function buildPosicionInsights() {
+  const ZONE_KEYS = ['CDMX Total','Condesa','Estadio Azteca','Polanco','Roma Norte'];
+  const ZONE_ICONS = {'CDMX Total':'🏙️','Condesa':'📍','Estadio Azteca':'🏟️','Polanco':'📌','Roma Norte':'🔍'};
+  const ulivRanks  = rankByLoc['ULIV']   || [];
+  const luminaRanks= rankByLoc['Lumina'] || [];
+
+  // Build zone array with data
+  const zones = ZONE_KEYS.map((z, i) => ({
+    zone: z,
+    icon: ZONE_ICONS[z] || '📍',
+    rank: ulivRanks[i]   || null,
+    apps: uliv_by_loc[z] || 0,
+    lumina: luminaRanks[i] || null
+  }));
+
+  const active = zones.filter(z => z.rank !== null && z.rank < 999);
+  const noShow = zones.filter(z => z.rank === null || z.rank >= 999);
+
+  active.sort((a, b) => a.rank - b.rank);
+  const byApps = [...active].sort((a, b) => b.apps - a.apps);
+
+  let html = '';
+
+  // Best ranked zone
+  if (active.length > 0) {
+    const best = active[0];
+    const vsLumina = best.lumina && best.lumina < 900
+      ? (best.rank < best.lumina
+          ? `ULIV supera a Lumina (#${best.lumina}) en esta zona.`
+          : `Lumina lidera con #${best.lumina}.`)
+      : '';
+    html += `<div class="insight positive">
+      <div class="insight-icon">${best.icon}</div>
+      <div>
+        <div class="insight-title">${best.zone}: mejor posición ULIV — #${best.rank}</div>
+        <div class="insight-text">${best.zone} es la zona con mejor posicionamiento para ${currentDate} con #${best.rank} y ${best.apps} apariciones en el top 100. ${vsLumina}</div>
+      </div>
+    </div>`;
+  }
+
+  // Highest volume zone (if different from best rank)
+  if (byApps.length > 0 && byApps[0].zone !== active[0]?.zone) {
+    const vol = byApps[0];
+    html += `<div class="insight info">
+      <div class="insight-icon">${vol.icon}</div>
+      <div>
+        <div class="insight-title">${vol.zone}: mayor volumen — ${vol.apps} apariciones</div>
+        <div class="insight-text">Con ${vol.apps} apariciones en el top 100, ${vol.zone} concentra el mayor volumen de visibilidad ULIV. Posición media: #${vol.rank}.</div>
+      </div>
+    </div>`;
+  }
+
+  // Worst active zone
+  if (active.length > 1) {
+    const worst = active[active.length - 1];
+    const type  = worst.rank > 60 ? 'warning' : 'info';
+    html += `<div class="insight ${type}">
+      <div class="insight-icon">${worst.icon}</div>
+      <div>
+        <div class="insight-title">${worst.zone}: zona más difícil — #${worst.rank}</div>
+        <div class="insight-text">${worst.zone} muestra el ranking más bajo en esta fecha con #${worst.rank} y ${worst.apps} apariciones. ${worst.rank > 60 ? 'Zona de alta competencia — oportunidad de mejora.' : ''}</div>
+      </div>
+    </div>`;
+  }
+
+  // Zones with no appearances
+  if (noShow.length > 0) {
+    const names = noShow.map(z => z.zone).join(', ');
+    html += `<div class="insight info">
+      <div class="insight-icon">🔎</div>
+      <div>
+        <div class="insight-title">Sin apariciones: ${names}</div>
+        <div class="insight-text">${names} no registra apariciones ULIV en el top 100 para ${currentDate}. ${noShow.find(z=>z.zone==='Estadio Azteca') ? 'La zona Azteca es de alta competencia durante partidos del Mundial.' : ''}</div>
+      </div>
+    </div>`;
+  }
+
+  const el = document.getElementById('posicionInsights');
+  if (el) el.innerHTML = html;
+
+  // Chart notes
+  const rankNote = active.map(z => `${z.zone}: #${z.rank}`).join(' · ');
+  const el1 = document.getElementById('zoneChartNote');
+  if (el1) el1.textContent = rankNote ? rankNote + '.' : '';
+
+  const appsNote = [...zones].sort((a,b)=>b.apps-a.apps).map(z => `${z.zone}: ${z.apps}`).join(' · ');
+  const el2 = document.getElementById('appsChartNote');
+  if (el2) el2.textContent = appsNote ? appsNote + ' apariciones.' : '';
+}
+
+// Custom dropdown
+function toggleDropdown(e) {
+  e.stopPropagation();
+  document.getElementById('dropdownOptions').classList.toggle('open');
+}
+function selectDate(value, label) {
+  loadDate(value);
+  const dd = document.getElementById('dropdownOptions');
+  if (dd) dd.classList.remove('open');
+}
+document.addEventListener('click', function() {
+  const dd = document.getElementById('dropdownOptions');
+  if (dd) dd.classList.remove('open');
+});
 </script>
 </body>
 </html>
