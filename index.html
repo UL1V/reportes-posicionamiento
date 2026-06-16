@@ -1997,6 +1997,9 @@ function makeChart(id, cfg) {
   charts[id] = new Chart(ctx, cfg);
 }
 
+let BRAND_COLORS_MKT = {};
+let mkt = {};
+
 function initCharts() {
   // Overall rank bar
   makeChart('chartOverallRank', {
@@ -2614,12 +2617,12 @@ function initCharts() {
   
   // ====== PRICE ANALYSIS — FULL MARKET DATA ======
 
-  const BRAND_COLORS_MKT = Object.assign({}, COLORS, {
+  BRAND_COLORS_MKT = Object.assign({}, COLORS, {
     Marriott:'#c0392b', Hilton:'#2980b9', Hyatt:'#8e44ad',
     IHG:'#d35400', Accor:'#27ae60', Wyndham:'#7f8c8d', Otros:'#adb5bd'
   });
 
-  const mkt = {
+  mkt = {
     distrib: {
       labels: ['<$200','$200-400','$400-600','$600-800','$800-1k','$1k-1.2k','$1.2k-1.5k','$1.5k-2k','$2k-2.5k','$2.5k-3k','>3k'],
       counts: [1602,2804,1330,655,529,315,298,148,117,48,117],
@@ -2924,26 +2927,8 @@ function initCharts() {
     }
   });
 
-  // Market table
-  const mktTableBody = document.getElementById('mktTableBody');
-  if (mktTableBody && mktTableBody.innerHTML.trim() === '') {
-    const segOf = p => p < 500 ? 'Budget' : p < 800 ? 'Mid' : p < 1200 ? 'Upper' : 'Premium';
-    const segBg  = {Budget:'#d8f3dc', Mid:'#fff3bf', Upper:'#ffd8b1', Premium:'#ffd6d6'};
-    const segTxt = {Budget:'#1b4332', Mid:'#7d4f00', Upper:'#7c3a00', Premium:'#7c1b1b'};
-    mkt.brands.forEach(b => {
-      const seg = segOf(b.medPrice);
-      const rankCls = b.avgRank <= 44 ? 'rank-good' : b.avgRank <= 55 ? 'rank-mid' : 'rank-low';
-      mktTableBody.innerHTML += `<tr>
-        <td><strong style="color:${BRAND_COLORS_MKT[b.name]||'#adb5bd'}">${b.name}</strong></td>
-        <td style="text-align:center;font-weight:700">$${b.medPrice.toLocaleString()}</td>
-        <td style="text-align:center">$${b.meanPrice.toLocaleString()}</td>
-        <td style="text-align:center"><span class="rank-badge ${rankCls}">#${b.avgRank}</span></td>
-        <td style="text-align:center">${b.score}</td>
-        <td style="text-align:center">${b.reviews.toLocaleString()}</td>
-        <td style="text-align:center">${b.n.toLocaleString()}</td>
-      </tr>`;
-    });
-  }
+  // Market table — rendered dynamically on each date change
+  buildMktBrandsTable();
 
   // Historical: price evolution line chart
   makeChart('chartHistPrices', {
@@ -3129,6 +3114,49 @@ window.addEventListener('resize', fixStickyNav);
 // INIT
 loadDate('General');
 
+// MARKET BRANDS TABLE (dynamic — rebuilds on date change)
+function buildMktBrandsTable() {
+  const body = document.getElementById('mktTableBody');
+  if (!body || !mkt.brands) return;
+  body.innerHTML = '';
+  const d = byDate[currentDate];
+  if (!d) return;
+
+  // Dynamic rows for the 5 tracked brands
+  const dynRows = BRANDS.map(b => ({
+    name:      b,
+    medPrice:  b === 'ULIV' ? (d.ulivPriceMed || null) : null,
+    meanPrice: Math.round(d.avgPrice[b] || 0),
+    avgRank:   d.rankOverall[b] || 0,
+    score:     d.avgScore[b] || 0,
+    reviews:   Math.round(d.avgReviews[b] || 0),
+    n:         d.appTotal[b] || 0,
+    dyn:       true
+  })).filter(r => r.meanPrice > 0);
+
+  // Static rows for hotel chains not tracked per date
+  const staticRows = mkt.brands.filter(b => !BRANDS.includes(b.name));
+
+  const sortKey = r => r.medPrice != null ? r.medPrice : r.meanPrice;
+  const allRows = [...dynRows, ...staticRows].sort((a, b) => sortKey(a) - sortKey(b));
+
+  allRows.forEach(b => {
+    const rankCls = b.avgRank <= 44 ? 'rank-good' : b.avgRank <= 55 ? 'rank-mid' : 'rank-low';
+    const medStr  = b.medPrice != null ? '$' + Math.round(b.medPrice).toLocaleString() : '—';
+    const meanStr = b.meanPrice ? '$' + Math.round(b.meanPrice).toLocaleString() : '—';
+    const staticTag = !b.dyn ? '<span style="font-size:10px;color:#aaa;margin-left:4px">·jun15</span>' : '';
+    body.innerHTML += `<tr${!b.dyn ? ' style="opacity:0.7"' : ''}>
+      <td><strong style="color:${BRAND_COLORS_MKT[b.name]||'#adb5bd'}">${b.name}</strong>${staticTag}</td>
+      <td style="text-align:center;font-weight:700">${medStr}</td>
+      <td style="text-align:center">${meanStr}</td>
+      <td style="text-align:center"><span class="rank-badge ${rankCls}">#${b.avgRank}</span></td>
+      <td style="text-align:center">${b.score}</td>
+      <td style="text-align:center">${Math.round(b.reviews||0).toLocaleString()}</td>
+      <td style="text-align:center">${(b.n||0).toLocaleString()}</td>
+    </tr>`;
+  });
+}
+
 // PRECIOS KPI (dynamic)
 function buildPreciosKpis() {
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
@@ -3212,6 +3240,7 @@ function buildPreciosKpis() {
         ${priceBars}
       </div>
     </div>`;
+  buildMktBrandsTable();
 }
 
 // OTA SECTION (dynamic)
