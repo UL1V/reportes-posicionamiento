@@ -105,8 +105,9 @@
   .insights { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px; }
   .insight { background: var(--surface); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); display: flex; gap: 14px; align-items: flex-start; }
   .insight-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
-  .insight-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-  .insight-text { font-size: 13px; color: var(--text2); line-height: 1.55; }
+  .insight > div { min-width: 0; }
+  .insight-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; overflow-wrap: break-word; }
+  .insight-text { font-size: 13px; color: var(--text2); line-height: 1.55; overflow-wrap: break-word; }
   .insight.positive { border-left: 4px solid var(--good); }
   .insight.warning { border-left: 4px solid var(--warn); }
   .insight.danger { border-left: 4px solid #c0392b; background: #fff8f8; }
@@ -903,14 +904,14 @@
       <div class="insight-icon">🏙️</div>
       <div>
         <div class="insight-title">CDMX continúa débil — #61.6 en Jun 15 (vs #66.6 Jun4, #18.0 May21)</div>
-        <div class="insight-text">CDMX mejora ligeramente de #66.6 (Jun4) a #61.6 (Jun15), pero sigue muy lejos del #18.0 de May21. El patrón volátil de la zona (#14.2→#35.5→#31.1→#27.2→#18.0→#66.6→#61.6) sugiere factores puntuales de disponibilidad o algoritmo. Diagnosticar la causa es relevante mientras el Mundial está activo.</div>
+        <div class="insight-text">CDMX mejora ligeramente de #66.6 (Jun4) a #61.6 (Jun15), pero sigue muy lejos del #18.0 de May21. El patrón volátil de la zona (#14.2 → #35.5 → #31.1 → #27.2 → #18.0 → #66.6 → #61.6) sugiere factores puntuales de disponibilidad o algoritmo. Diagnosticar la causa es relevante mientras el Mundial está activo.</div>
       </div>
     </div>
     <div class="insight warning">
       <div class="insight-icon">📊</div>
       <div>
         <div class="insight-title">Capitalia: patrón oscilante en posición — #47.3 en Jun 15</div>
-        <div class="insight-text">Capitalia mejora a #47.3 en Jun 15. En 8 períodos: #49.7→#53.8→#60.8→#51.7→#56.5→#50.6→?→#47.3, el patrón oscilante persiste. Alto volumen sin calidad de posición sostenida. Con precio entre las marcas más caras del mercado, el retorno de posicionamiento sigue siendo el más bajo del grupo competitivo.</div>
+        <div class="insight-text">Capitalia mejora a #47.3 en Jun 15. En 8 períodos: #49.7 → #53.8 → #60.8 → #51.7 → #56.5 → #50.6 → ? → #47.3, el patrón oscilante persiste. Alto volumen sin calidad de posición sostenida. Con precio entre las marcas más caras del mercado, el retorno de posicionamiento sigue siendo el más bajo del grupo competitivo.</div>
       </div>
     </div>
     <div class="insight positive">
