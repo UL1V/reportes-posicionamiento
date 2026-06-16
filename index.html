@@ -184,11 +184,10 @@
       </div>
       <div class="csel-options" id="dropdownOptions">
         <div class="csel-opt active" onclick="selectDate('General','General — Todos los partidos')">General — Todos los partidos</div>
-        <div class="csel-opt" onclick="selectDate('Jun 10','Jun 10–12 · Partido 1')">Jun 10–12 · Partido 1</div>
-        <div class="csel-opt" onclick="selectDate('Jun 16','Jun 16–18 · Partido 2')">Jun 16–18 · Partido 2</div>
-        <div class="csel-opt" onclick="selectDate('Jun 24','Jun 24–26 · Partido 3')">Jun 24–26 · Partido 3</div>
-        <div class="csel-opt" onclick="selectDate('Jun 29','Jun 29–Jul 1 · Partido 4')">Jun 29–Jul 1 · Partido 4</div>
-        <div class="csel-opt" onclick="selectDate('Jul 4','Jul 4–6 · Partido 5')">Jul 4–6 · Partido 5</div>
+        <div class="csel-opt" onclick="selectDate('Jun 16','Jun 16–18 · Partido 1')">Jun 16–18 · Partido 1</div>
+        <div class="csel-opt" onclick="selectDate('Jun 24','Jun 24–26 · Partido 2')">Jun 24–26 · Partido 2</div>
+        <div class="csel-opt" onclick="selectDate('Jun 29','Jun 29–Jul 1 · Partido 3')">Jun 29–Jul 1 · Partido 3</div>
+        <div class="csel-opt" onclick="selectDate('Jul 4','Jul 4–6 · Partido 4')">Jul 4–6 · Partido 4</div>
       </div>
     </div>
     <span style="font-size:12px;opacity:.65">Los datos de cada sección reflejan la fecha seleccionada</span>
@@ -212,7 +211,7 @@
 
 <!-- ===== OVERVIEW ===== -->
 <div class="section active" id="overview">
-  <div class="sec-title">Panorama General — <span id="currentDateTitle">Jun 10</span> · Mundial 2026</div>
+  <div class="sec-title">Panorama General — <span id="currentDateTitle">General</span> · Mundial 2026</div>
   <div class="sec-sub">Condiciones del scraping: Booking + Expedia · Chrome + Edge incógnito · Top 100 resultados por búsqueda · VPN con ubicación en Dallas, TX, EE.UU. · 7° período de medición histórico · Mundial 2026 en curso</div>
 
   <div class="kpi-grid">
@@ -262,7 +261,7 @@
     <div class="method-item">
       <div class="method-icon">📅</div>
       <div class="method-label">Fechas check-in</div>
-      <div class="method-value">Jun 10, 16, 24, 29 · Jul 4</div>
+      <div class="method-value">Jun 16, 24, 29 · Jul 4</div>
     </div>
     <div class="method-item">
       <div class="method-icon">🏆</div>
@@ -452,7 +451,7 @@
 <!-- ===== TEMPORAL ===== -->
 <div class="section" id="temporal">
   <div class="sec-title">Evolución Temporal</div>
-  <div class="sec-sub">Cómo cambia el posicionamiento entre los 5 partidos del Mundial analizados (Jun 10 · Jun 16 · Jun 24 · Jun 29 · Jul 4)</div>
+  <div class="sec-sub">Cómo cambia el posicionamiento entre los 4 partidos del Mundial analizados (Jun 16 · Jun 24 · Jun 29 · Jul 4)</div>
 
   <div class="card">
     <div class="card-title">Tendencia de Posición Media por Fecha Check-in</div>
@@ -877,7 +876,7 @@
 
   <div class="kpi-grid" id="recStatusKpis" style="margin-bottom:28px">
     <div class="kpi" style="border-left-color:#2d6a4f">
-      <div class="kpi-label">Posición ULIV · <span id="recDate">Jun 10</span></div>
+      <div class="kpi-label">Posición ULIV · <span id="recDate">General</span></div>
       <div class="kpi-value good-val" id="recUlivRank" style="font-size:22px">#39.9</div>
       <div class="kpi-sub" id="recUlivSub">fecha seleccionada</div>
     </div>
@@ -892,7 +891,7 @@
       <div class="kpi-sub" id="recTopCompSub">Lidera el mercado · fecha seleccionada</div>
     </div>
     <div class="kpi info">
-      <div class="kpi-label">Precio ULIV · <span id="recDatePrice">Jun 10</span></div>
+      <div class="kpi-label">Precio ULIV · <span id="recDatePrice">General</span></div>
       <div class="kpi-value" id="recUlivPrice" style="font-size:18px">$716</div>
       <div class="kpi-sub">Mediana · fecha seleccionada</div>
     </div>
@@ -1031,7 +1030,7 @@
       <div class="kpi-sub" id="preciosMktSub">promedio 4 partidos · baja de $417 (Jun 9)</div>
     </div>
     <div class="kpi warn">
-      <div class="kpi-label">Mediana ULIV vs. mercado · <span id="preciosUlivDate">Jun 10</span></div>
+      <div class="kpi-label">Mediana ULIV vs. mercado · <span id="preciosUlivDate">General</span></div>
       <div class="kpi-value" id="preciosUlivDiff">+91%</div>
       <div class="kpi-sub" id="preciosUlivSub">$716 ULIV vs $375 mercado · fecha seleccionada</div>
     </div>
@@ -1043,7 +1042,7 @@
   </div>
 
   <div class="card" style="margin-bottom:20px;border-top:3px solid var(--uliv)">
-    <div class="card-title">Precios del mercado — <span id="preciosDynDate">Jun 10</span></div>
+    <div class="card-title">Precios del mercado — <span id="preciosDynDate">General</span></div>
     <div class="card-sub" id="preciosDynSub">Cuartiles del mercado combinado (Expedia + Booking) · fecha seleccionada</div>
     <div id="preciosDynBody" style="margin-top:16px"></div>
   </div>
@@ -1125,7 +1124,7 @@
       <p style="font-size:12px;color:#555;margin-top:10px;line-height:1.5">El umbral crítico es 8.5 puntos: superarlo equivale a ganar ~10 posiciones en promedio. ULIV ya supera este umbral con un score de 9.08, lo que lo protege en el ranking.</p>
     </div>
     <div class="card">
-      <div class="card-title">Precio Mediano por Zona · <span id="preciosZoneDate">Jun 10</span></div>
+      <div class="card-title">Precio Mediano por Zona · <span id="preciosZoneDate">General</span></div>
       <div class="card-sub">Precio P50 del mercado por zona · Expedia vs Booking · fecha seleccionada</div>
       <div class="chart-wrap"><canvas id="chartMktZone"></canvas></div>
       <p id="preciosZoneNote" style="font-size:12px;color:#555;margin-top:10px;line-height:1.5"></p>
@@ -1668,7 +1667,8 @@ const appByMatch = {
 
 // ====== GENERAL: aggregate across all match dates ======
 function computeGeneral() {
-  const dates = MATCH_DATES;
+  // Jun 10 already played — General view covers only the 4 active match dates
+  const dates = ['Jun 16', 'Jun 24', 'Jun 29', 'Jul 4'];
   const avgArr = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length*10)/10 : 0;
   const avgBrand = key => {
     const r = {};
@@ -1816,8 +1816,8 @@ let uliv_props   = byDate['General'].uliv_props;
 let aztecaData   = byDate['General'].aztecaData;
 let market       = byDate['General'].market;
 let ulivPriceMed = byDate['General'].ulivPriceMed;
-let otaBooking   = byDate['Jun 10'].booking;
-let otaExpedia   = byDate['Jun 10'].expedia;
+let otaBooking   = byDate['General'].booking;
+let otaExpedia   = byDate['General'].expedia;
 const trend      = trendByMatch;
 const appCount   = appByMatch;
 const DATES      = MATCH_DATES;
@@ -1917,7 +1917,7 @@ function loadDate(label) {
 
   // Sync custom selector
   const lbl = document.getElementById('selectedDateLabel');
-  const labels = {'General':'General — Todos los partidos','Jun 10':'Jun 10–12 · Partido 1','Jun 16':'Jun 16–18 · Partido 2','Jun 24':'Jun 24–26 · Partido 3','Jun 29':'Jun 29–Jul 1 · Partido 4','Jul 4':'Jul 4–6 · Partido 5'};
+  const labels = {'General':'General — Todos los partidos','Jun 16':'Jun 16–18 · Partido 1','Jun 24':'Jun 24–26 · Partido 2','Jun 29':'Jun 29–Jul 1 · Partido 3','Jul 4':'Jul 4–6 · Partido 4'};
   if (lbl) lbl.textContent = labels[label] || label;
   // Mark active option
   document.querySelectorAll('.csel-opt').forEach(el => {
