@@ -184,10 +184,10 @@
       </div>
       <div class="csel-options" id="dropdownOptions">
         <div class="csel-opt active" onclick="selectDate('General','General — Todos los partidos')">General — Todos los partidos</div>
-        <div class="csel-opt" onclick="selectDate('Jun 16','Jun 16–18 · Partido 1')">Jun 16–18 · Partido 1</div>
-        <div class="csel-opt" onclick="selectDate('Jun 24','Jun 24–26 · Partido 2')">Jun 24–26 · Partido 2</div>
-        <div class="csel-opt" onclick="selectDate('Jun 29','Jun 29–Jul 1 · Partido 3')">Jun 29–Jul 1 · Partido 3</div>
-        <div class="csel-opt" onclick="selectDate('Jul 4','Jul 4–6 · Partido 4')">Jul 4–6 · Partido 4</div>
+        <div class="csel-opt" onclick="selectDate('Jun 16','Jun 16–18 · Partido 2')">Jun 16–18 · Partido 2</div>
+        <div class="csel-opt" onclick="selectDate('Jun 24','Jun 24–26 · Partido 3')">Jun 24–26 · Partido 3</div>
+        <div class="csel-opt" onclick="selectDate('Jun 29','Jun 29–Jul 1 · Partido 4')">Jun 29–Jul 1 · Partido 4</div>
+        <div class="csel-opt" onclick="selectDate('Jul 4','Jul 4–6 · Partido 5')">Jul 4–6 · Partido 5</div>
       </div>
     </div>
     <span style="font-size:12px;opacity:.65">Los datos de cada sección reflejan la fecha seleccionada</span>
@@ -826,7 +826,7 @@
             <td>9.09</td>
             <td class="change-neutral">9.04 <span style="font-weight:400;color:#888">(−0.05)</span></td>
             <td class="change-neutral">8.95 <span style="font-weight:400;color:#888">(−0.09)</span></td>
-            <td class="change-neutral">~8.9 <span style="font-weight:400;color:#888"></span></td>
+            <td class="change-neutral">8.9 <span style="font-weight:400;color:#888">(−0.05)</span></td>
             <td>↔️</td>
           </tr>
           <tr>
@@ -838,7 +838,7 @@
             <td>$920</td>
             <td class="change-good">$687 <span style="font-weight:400;color:#888">(−$233, −25%)</span></td>
             <td class="change-neutral">$729 <span style="font-weight:400;color:#888">(+$42)</span></td>
-            <td class="change-neutral">~$662 <span style="font-weight:400;color:#888"></span></td>
+            <td class="change-neutral">$668 <span style="font-weight:400;color:#888">(−$61, −8%)</span></td>
             <td>📉</td>
           </tr>
           <tr>
@@ -1797,8 +1797,8 @@ function computeGeneral() {
   };
 }
 byDate['General'] = computeGeneral();
-// Override OTA price medians with true medians computed from all raw records
-// (computeGeneral averages per-date medians which inflates the result)
+// Override with true values computed from raw records (avg-of-averages != weighted avg)
+byDate['General'].rankOverall.ULIV       = 42.1;  // weighted avg of all 295 ULIV records
 byDate['General'].ulivPriceMed           = 632;   // median of all 295 ULIV records
 byDate['General'].expedia.ulivPriceMed   = 638;   // median of all 187 Expedia ULIV price records
 byDate['General'].booking.ulivPriceMed   = 580;   // median of all 108 Booking ULIV price records
@@ -1917,7 +1917,7 @@ function loadDate(label) {
 
   // Sync custom selector
   const lbl = document.getElementById('selectedDateLabel');
-  const labels = {'General':'General — Todos los partidos','Jun 16':'Jun 16–18 · Partido 1','Jun 24':'Jun 24–26 · Partido 2','Jun 29':'Jun 29–Jul 1 · Partido 3','Jul 4':'Jul 4–6 · Partido 4'};
+  const labels = {'General':'General — Todos los partidos','Jun 16':'Jun 16–18 · Partido 2','Jun 24':'Jun 24–26 · Partido 3','Jun 29':'Jun 29–Jul 1 · Partido 4','Jul 4':'Jul 4–6 · Partido 5'};
   if (lbl) lbl.textContent = labels[label] || label;
   // Mark active option
   document.querySelectorAll('.csel-opt').forEach(el => {
