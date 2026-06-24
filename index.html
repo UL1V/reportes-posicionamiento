@@ -1659,7 +1659,12 @@ const byDate = {
 
 };  // end byDate
 
-
+// Expedia no captura scores — usar el último disponible (Jun 16) como fallback
+['Jun 24', 'Jun 29', 'Jul 4'].forEach(d => {
+  if (!byDate[d].expedia.scoreByBrand['ULIV']) {
+    byDate[d].expedia.scoreByBrand = Object.assign({}, byDate['Jun 16'].expedia.scoreByBrand);
+  }
+});
 
 // ====== TREND ENTRE FECHAS ======
 
@@ -1931,7 +1936,7 @@ function loadDate(label) {
   set('kpiExpApps',   otaExpedia.appByBrand['ULIV']);
   set('kpiExpRank',   '#' + otaExpedia.rankByBrand['ULIV']);
   set('kpiExpPrice',  '$' + otaExpedia.ulivPriceMed);
-  set('kpiExpScore',  otaExpedia.scoreByBrand['ULIV'] || '—');
+  set('kpiExpScore',  otaExpedia.scoreByBrand['ULIV']);
 
   // Sync custom selector
   const lbl = document.getElementById('selectedDateLabel');
@@ -3122,7 +3127,7 @@ function initCharts() {
         {label:'Expedia', data:BRANDS.map(b=>otaExpedia.scoreByBrand[b]), backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
-    options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.parsed.y?c.dataset.label+': '+c.parsed.y.toFixed(2):'sin datos'}}},scales:{y:{title:{display:true,text:'Score promedio'},min:0,max:10,grid:{color:'#e8e5df'}}}}
+    options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)}}},scales:{y:{title:{display:true,text:'Score promedio'},min:7.5,max:10,grid:{color:'#e8e5df'}}}}
   });
 
   makeChart('chartOtaPrice', {
