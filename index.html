@@ -1748,7 +1748,7 @@ function computeGeneral() {
       // sum total appearances across all dates (not average)
       r.appByBrand[b] = dates.reduce((a,d) => a+(byDate[d][key]?.appByBrand?.[b]||0), 0);
       const sb = dates.map(d => byDate[d][key]?.scoreByBrand?.[b]||0).filter(v=>v>0);
-      r.scoreByBrand[b] = sb.length ? Math.round(sb.reduce((a,x)=>a+x,0)/sb.length*10)/10 : 0;
+      r.scoreByBrand[b] = sb.length ? Math.round(sb.reduce((a,x)=>a+x,0)/sb.length*10)/10 : null;
     });
     LOCS_SHORT.forEach((_,i) => {
       const za = dates.map(d => (byDate[d][key]?.ulivZoneApp||[])[i]||0).filter(v=>v>0);
@@ -1927,11 +1927,11 @@ function loadDate(label) {
   set('kpiBkgApps',   otaBooking.appByBrand['ULIV']);
   set('kpiBkgRank',   '#' + otaBooking.rankByBrand['ULIV']);
   set('kpiBkgPrice',  '$' + otaBooking.ulivPriceMed);
-  set('kpiBkgScore',  otaBooking.scoreByBrand['ULIV']);
+  set('kpiBkgScore',  otaBooking.scoreByBrand['ULIV'] || '—');
   set('kpiExpApps',   otaExpedia.appByBrand['ULIV']);
   set('kpiExpRank',   '#' + otaExpedia.rankByBrand['ULIV']);
   set('kpiExpPrice',  '$' + otaExpedia.ulivPriceMed);
-  set('kpiExpScore',  otaExpedia.scoreByBrand['ULIV']);
+  set('kpiExpScore',  otaExpedia.scoreByBrand['ULIV'] || '—');
 
   // Sync custom selector
   const lbl = document.getElementById('selectedDateLabel');
