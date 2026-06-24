@@ -184,7 +184,6 @@
       </div>
       <div class="csel-options" id="dropdownOptions">
         <div class="csel-opt active" onclick="selectDate('General','General — Todos los partidos')">General — Todos los partidos</div>
-        <div class="csel-opt" onclick="selectDate('Jun 16','Jun 16–18 · Partido 2')">Jun 16–18 · Partido 2</div>
         <div class="csel-opt" onclick="selectDate('Jun 24','Jun 24–26 · Partido 3')">Jun 24–26 · Partido 3</div>
         <div class="csel-opt" onclick="selectDate('Jun 29','Jun 29–Jul 1 · Partido 4')">Jun 29–Jul 1 · Partido 4</div>
         <div class="csel-opt" onclick="selectDate('Jul 4','Jul 4–6 · Partido 5')">Jul 4–6 · Partido 5</div>
@@ -1683,8 +1682,8 @@ const appByMatch = {
 
 // ====== GENERAL: aggregate across all match dates ======
 function computeGeneral() {
-  // Jun 10 already played — General view covers only the 4 active match dates
-  const dates = ['Jun 16', 'Jun 24', 'Jun 29', 'Jul 4'];
+  // Jun 10 and Jun 16 already played — General view covers only the 3 remaining match dates
+  const dates = ['Jun 24', 'Jun 29', 'Jul 4'];
   const avgArr = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length*10)/10 : 0;
   const avgBrand = key => {
     const r = {};
@@ -1814,10 +1813,10 @@ function computeGeneral() {
 }
 byDate['General'] = computeGeneral();
 // Override with true values computed from raw records (avg-of-averages != weighted avg)
-byDate['General'].rankOverall.ULIV       = 36.1;  // weighted avg of all ULIV records across 4 match dates
-byDate['General'].ulivPriceMed           = 452.0;   // median of all ULIV records across 4 match dates
-byDate['General'].expedia.ulivPriceMed   = 511.0;   // median of all Expedia ULIV price records
-byDate['General'].booking.ulivPriceMed   = 418.0;   // median of all Booking ULIV price records
+byDate['General'].rankOverall.ULIV       = 35.3;  // weighted avg of 249 ULIV records (Jun 24, Jun 29, Jul 4)
+byDate['General'].ulivPriceMed           = 438.0;   // median of 249 ULIV records (Jun 24, Jun 29, Jul 4)
+byDate['General'].expedia.ulivPriceMed   = 498.0;   // median of Expedia ULIV records (Jun 24, Jun 29, Jul 4)
+byDate['General'].booking.ulivPriceMed   = 410.0;   // median of Booking ULIV records (Jun 24, Jun 29, Jul 4)
 
 // ====== DEFAULT DATE: General ======
 let currentDate = 'General';
@@ -1935,7 +1934,7 @@ function loadDate(label) {
 
   // Sync custom selector
   const lbl = document.getElementById('selectedDateLabel');
-  const labels = {'General':'General — Todos los partidos','Jun 16':'Jun 16–18 · Partido 2','Jun 24':'Jun 24–26 · Partido 3','Jun 29':'Jun 29–Jul 1 · Partido 4','Jul 4':'Jul 4–6 · Partido 5'};
+  const labels = {'General':'General — Todos los partidos','Jun 24':'Jun 24–26 · Partido 3','Jun 29':'Jun 29–Jul 1 · Partido 4','Jul 4':'Jul 4–6 · Partido 5'};
   if (lbl) lbl.textContent = labels[label] || label;
   // Mark active option
   document.querySelectorAll('.csel-opt').forEach(el => {
