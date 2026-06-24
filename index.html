@@ -3122,7 +3122,7 @@ function initCharts() {
         {label:'Expedia', data:BRANDS.map(b=>otaExpedia.scoreByBrand[b]), backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
-    options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)}}},scales:{y:{title:{display:true,text:'Score promedio'},min:7.5,max:10,grid:{color:'#e8e5df'}}}}
+    options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.parsed.y?c.dataset.label+': '+c.parsed.y.toFixed(2):'sin datos'}}},scales:{y:{title:{display:true,text:'Score promedio'},min:0,max:10,grid:{color:'#e8e5df'}}}}
   });
 
   makeChart('chartOtaPrice', {
@@ -3130,8 +3130,8 @@ function initCharts() {
     data: {
       labels: ['ULIV — precio medio', 'Mercado — P50'],
       datasets: [
-        {label:'Booking', data:[otaBooking.ulivPriceMed||506, 391], backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
-        {label:'Expedia', data:[otaExpedia.ulivPriceMed||630, 506], backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
+        {label:'Booking', data:[otaBooking.ulivPriceMed||0, otaBooking.market.median||0], backgroundColor:OTA_COLORS.booking.bg, borderColor:OTA_COLORS.booking.border, borderWidth:2, borderRadius:6},
+        {label:'Expedia', data:[otaExpedia.ulivPriceMed||0, otaExpedia.market.median||0], backgroundColor:OTA_COLORS.expedia.bg, borderColor:OTA_COLORS.expedia.border, borderWidth:2, borderRadius:6}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': $'+c.parsed.y.toLocaleString()}}},scales:{y:{title:{display:true,text:'Precio USD'},grid:{color:'#e8e5df'},ticks:{callback:v=>'$'+v.toLocaleString()}}}}
