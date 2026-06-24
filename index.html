@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ULIV — Análisis de Posicionamiento OTA · 23/06/2026</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>window.Chart || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"><\/script>')</script>
 <style>
   :root {
     --bg: #f7f7f7;
@@ -3159,7 +3160,13 @@ window.addEventListener('load', fixStickyNav);
 window.addEventListener('resize', fixStickyNav);
 
 // INIT
-loadDate('General');
+try {
+  if (typeof Chart === 'undefined') throw new Error('Chart.js no cargó');
+  loadDate('General');
+} catch(e) {
+  console.error('Init error:', e);
+  document.body.insertAdjacentHTML('afterbegin', '<div style="background:#c00;color:#fff;padding:12px;font-family:monospace;font-size:13px;position:fixed;top:0;left:0;right:0;z-index:9999">⚠️ Error al inicializar: ' + e.message + ' — Recarga la página (Ctrl+Shift+R)</div>');
+}
 
 // MARKET BRANDS TABLE (dynamic — rebuilds on date change)
 function buildMktBrandsTable() {
