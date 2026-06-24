@@ -1936,7 +1936,8 @@ function loadDate(label) {
   set('kpiExpApps',   otaExpedia.appByBrand['ULIV']);
   set('kpiExpRank',   '#' + otaExpedia.rankByBrand['ULIV']);
   set('kpiExpPrice',  '$' + otaExpedia.ulivPriceMed);
-  set('kpiExpScore',  otaExpedia.scoreByBrand['ULIV']);
+  const _expScore = otaExpedia.scoreByBrand['ULIV'] || byDate['Jun 16']?.expedia?.scoreByBrand?.['ULIV'] || '—';
+  set('kpiExpScore',  _expScore);
 
   // Sync custom selector
   const lbl = document.getElementById('selectedDateLabel');
